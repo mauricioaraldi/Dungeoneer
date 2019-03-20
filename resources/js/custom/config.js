@@ -1,7 +1,7 @@
-﻿Values = {
+﻿const Values = {
 	map: [],
-	lines: 35,
-	columns: 60,
+	lines: 47,
+	columns: 95,
 	roomMinWidth: 2,
 	roomMaxWidth: 6,
 	roomMinHeight: 2,
@@ -9,7 +9,7 @@
 	tileSize: 20
 };
 
-Tiles = {
+const Tiles = {
 	door: '5',
 	wall: '#',
 	floor: '_',
@@ -17,7 +17,7 @@ Tiles = {
 	stairUp: 'A'
 };
 
-Content = {
+const Content = {
 	rooms: [],
 	corridors: [],
 	stairsUp: [],

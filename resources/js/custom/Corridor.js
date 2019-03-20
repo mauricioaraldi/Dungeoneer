@@ -4,7 +4,7 @@
  * @author mauricio.araldi
  * @since 0.3.0
  */
-Corridor = (function() {
+const Corridor = (function() {
 	/**
 	 * Generate a new corridor on the map
 	 *

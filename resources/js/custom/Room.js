@@ -4,7 +4,7 @@
  * @author mauricio.araldi
  * @since 22/06/2015
  */
-Room = (() => {
+const Room = (() => {
 	/**
 	 * Generate the first room of the map. This function needs to be separated
 	 * because it needs to surely generate a room, with no errors.

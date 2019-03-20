@@ -4,7 +4,7 @@
  * @author mauricio.araldi
  * @since 0.3.0
  */
-Stair = (() => {
+const Stair = (() => {
 	/**
 	 * Generates a stair down in map
 	 *

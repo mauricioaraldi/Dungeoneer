@@ -4,7 +4,7 @@
  * @author mauricio.araldi
  * @since 0.3.0
  */
-Utils = (() => {
+const Utils = (() => {
 	/**
 	 * Finds and return a number between two numers
 	 * 

@@ -3,7 +3,7 @@
 	
 	Values.map = Room.generateFirstRoom(Values.map);
 	
-	Values.map = Map.generateMap(Values.map, 1500);
+	Values.map = Map.generateMap(Values.map, 3000);
 	
 	Values.map = Stair.generateStairDown(Values.map, 500);
 	

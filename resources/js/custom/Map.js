@@ -4,7 +4,7 @@
  * @author mauricio.araldi
  * @since 0.3.0
  */
-Map = (() => {
+const Map = (() => {
 	/**
 	 * Initiate the map
 	 *
@@ -16,25 +16,22 @@ Map = (() => {
 	 * @return {Array<Array<string>>} A blank map
 	 */
 	function initiateMap(lines, columns) {
-		var newMap = [];
+		const map = [];
 		
-		//Generate lines
-		for (var l=0; l < lines; l++) {
-			var line = [];
+		while (lines--) {
+			const line = [];
 			
-			//Generate columns
-			for (var c=0; c < columns; c++) {
-				var column = line[c];
+			for (let c = 0; c < columns; c++) {
+				const column = line[c];
 				
-				//Initialize cells with an wall. Pushes the cell into the line
+				//Initialize cells with an wall
 				line.push(Tiles.wall);
 			}
 			
-			//Pushes the line into the map
-			newMap.push(line);
+			map.push(line);
 		}
 		
-		return newMap;
+		return map;
 	}
 
 	/**
@@ -49,15 +46,15 @@ Map = (() => {
 	 * @return {Array<Array<string>>} The filled map
 	 */
 	function generateMap(map, totalTries, currentTry = 0) {
-		var chance = Utils.numberBetween(1, 8);
+		const chance = Utils.numberBetween(1, 8);
 		
-		if (chance == 1) {
+		if (chance === 1) {
 			Corridor.generateCorridor(map);
 		} else if (chance >= 2) {
 			Room.generateRoom(map);
 		}
 
-		if (++currentTry == totalTries) {
+		if (++currentTry === totalTries) {
 			return map;
 		}
 		

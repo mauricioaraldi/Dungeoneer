@@ -4,7 +4,7 @@
  * @author mauricio.araldi
  * @since 0.3.0
  */
-Print = (function() {
+const Print = (function() {
 	/**
 	 * Print a coloured map on body
 	 *

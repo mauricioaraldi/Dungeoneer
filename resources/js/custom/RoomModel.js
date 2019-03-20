@@ -1,4 +1,4 @@
-function Room(initLine, initColumn, endLine, endColumn) {
+function RoomModel(initLine, initColumn, endLine, endColumn) {
 	this.initLine = initLine;
 	this.initColumn = initColumn;
 	this.endLine = endLine;

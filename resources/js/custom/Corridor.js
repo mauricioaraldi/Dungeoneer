@@ -35,62 +35,230 @@ const Corridor = (() => {
 		if (directions.indexOf('T') > -1) {
 			const finalLine = randomLine - height;
 
+			let hasRoomForCorridor,
+				hasOnlyWallsAroundCorridor;
+
 			if (finalLine <= 1) {
 				return false;
 			}
 
-			if (Utils.scanRect(map, Math.min(randomLine, finalLine), randomColumn, Math.max(randomLine, finalLine) - 2, randomColumn, Tiles.wall) // If there's room for the corridor
-				&& Utils.scanRect(map, Math.min(randomLine, finalLine), randomColumn - 1, Math.max(randomLine, finalLine) - 2, randomColumn + 1, Tiles.wall)) { // If there is only wall on the sides of the corridor
-				
+			hasRoomForCorridor = Utils.scanRect(
+				map,
+				Math.min(randomLine, finalLine),
+				randomColumn,
+				Math.max(randomLine, finalLine) - 2,
+				randomColumn,
+				Tiles.wall
+			);
+
+			hasOnlyWallsAroundCorridor = Utils.scanRect(
+				map,
+				Math.min(randomLine, finalLine),
+				randomColumn - 1,
+				Math.max(randomLine, finalLine) - 2,
+				randomColumn + 1,
+				Tiles.wall
+			);
+
+			if (hasRoomForCorridor && hasOnlyWallsAroundCorridor) {
 				// -1 and -2 to draw the door and not override it
-				map = Utils.fillRect(Tiles.door, map, Math.max(randomLine, finalLine) - 1, randomColumn, Math.max(randomLine, finalLine) - 1, randomColumn);
-				map = Utils.fillRect(Tiles.floor, map, Math.min(randomLine, finalLine), randomColumn, Math.max(randomLine, finalLine) - 2, randomColumn);
-				Content.corridors.push(new CorridorModel(Math.min(randomLine, finalLine), randomColumn, Math.max(randomLine, finalLine) - 2, randomColumn));
+				map = Utils.fillRect(
+					Tiles.door,
+					map,
+					Math.max(randomLine, finalLine) - 1,
+					randomColumn,
+					Math.max(randomLine, finalLine) - 1,
+					randomColumn
+				);
+
+				map = Utils.fillRect(
+					Tiles.floor,
+					map,
+					Math.min(randomLine, finalLine),
+					randomColumn,
+					Math.max(randomLine, finalLine) - 2,
+					randomColumn
+				);
+
+				Content.corridors.push(
+					new CorridorModel(
+						Math.min(randomLine, finalLine),
+						randomColumn,
+						Math.max(randomLine, finalLine) - 2,
+						randomColumn
+					)
+				);
 			}
 		} else if (directions.indexOf('B') > -1) {
 			const finalLine = randomLine + height;
+
+			let hasRoomForCorridor,
+				hasOnlyWallsAroundCorridor;
 
 			if (finalLine >= Values.lines - 2) {
 				return false;
 			}
 
-			if (Utils.scanRect(map, Math.min(randomLine, finalLine) + 2, randomColumn, Math.max(randomLine, finalLine), randomColumn, Tiles.wall) // If there's room for the corridor
-				&& Utils.scanRect(map, Math.min(randomLine, finalLine) + 2, randomColumn - 1, Math.max(randomLine, finalLine), randomColumn + 1, Tiles.wall)) { // If there is onyl wall on the sides of the corridor
-				
+			hasRoomForCorridor = Utils.scanRect(
+				map,
+				Math.min(randomLine, finalLine) + 2,
+				randomColumn,
+				Math.max(randomLine, finalLine),
+				randomColumn,
+				Tiles.wall
+			);
+
+			hasOnlyWallsAroundCorridor = Utils.scanRect(
+				map,
+				Math.min(randomLine, finalLine) + 2,
+				randomColumn - 1,
+				Math.max(randomLine, finalLine),
+				randomColumn + 1,
+				Tiles.wall
+			);
+
+			if (hasRoomForCorridor && hasOnlyWallsAroundCorridor) {
 				// +1 and +2 to draw the door and not override it
-				map = Utils.fillRect(Tiles.door, map, Math.min(randomLine, finalLine) + 1, randomColumn, Math.min(randomLine, finalLine) + 1, randomColumn);
-				map = Utils.fillRect(Tiles.floor, map, Math.min(randomLine, finalLine) + 2, randomColumn, Math.max(randomLine, finalLine), randomColumn);
-				Content.corridors.push(new CorridorModel(Math.min(randomLine, finalLine) + 2, randomColumn, Math.max(randomLine, finalLine), randomColumn));
+				map = Utils.fillRect(
+					Tiles.door,
+					map,
+					Math.min(randomLine, finalLine) + 1,
+					randomColumn,
+					Math.min(randomLine, finalLine) + 1,
+					randomColumn
+				);
+
+				map = Utils.fillRect(
+					Tiles.floor,
+					map,
+					Math.min(randomLine, finalLine) + 2,
+					randomColumn,
+					Math.max(randomLine, finalLine),
+					randomColumn
+				);
+
+				Content.corridors.push(
+					new CorridorModel(
+						Math.min(randomLine, finalLine) + 2,
+						randomColumn,
+						Math.max(randomLine, finalLine),
+						randomColumn
+					)
+				);
 			}
 		} else if (directions.indexOf('R') > -1) {
 			const finalColumn = randomColumn + width;
+
+			let hasRoomForCorridor,
+				hasOnlyWallsAroundCorridor;
 
 			if (finalColumn >= Values.columns - 2) {
 				return false;
 			}
 
-			if (Utils.scanRect(map, randomLine, Math.min(randomColumn, finalColumn) + 2, randomLine, Math.max(randomColumn, finalColumn), Tiles.wall) // If there's room for the corridor
-				&& Utils.scanRect(map, randomLine - 1, Math.min(randomColumn, finalColumn) + 2, randomLine + 1, Math.max(randomColumn, finalColumn), Tiles.wall)) { // If there is onyl wall on the sides of the corridor
+			hasRoomForCorridor = Utils.scanRect(
+				map,
+				randomLine,
+				Math.min(randomColumn, finalColumn) + 2,
+				randomLine,
+				Math.max(randomColumn, finalColumn),
+				Tiles.wall
+			);
 
+			hasOnlyWallsAroundCorridor = Utils.scanRect(
+				map,
+				randomLine - 1,
+				Math.min(randomColumn, finalColumn) + 2,
+				randomLine + 1,
+				Math.max(randomColumn, finalColumn),
+				Tiles.wall
+			);
+
+			if (hasRoomForCorridor && hasOnlyWallsAroundCorridor) {
 				// +1 and +2 to draw the door and not override it
-				map = Utils.fillRect(Tiles.door, map, randomLine, Math.min(randomColumn, finalColumn) + 1, randomLine, Math.max(randomColumn, finalColumn));
-				map = Utils.fillRect(Tiles.floor, map, randomLine, Math.min(randomColumn, finalColumn) + 2, randomLine, Math.max(randomColumn, finalColumn));
-				Content.corridors.push(new CorridorModel(randomLine, Math.min(randomColumn, finalColumn) + 2, randomLine, Math.max(randomColumn, finalColumn)));
+				map = Utils.fillRect(
+					Tiles.door,
+					map,
+					randomLine,
+					Math.min(randomColumn, finalColumn) + 1,
+					randomLine,
+					Math.max(randomColumn, finalColumn)
+				);
+
+				map = Utils.fillRect(
+					Tiles.floor,
+					map,
+					randomLine,
+					Math.min(randomColumn, finalColumn) + 2,
+					randomLine,
+					Math.max(randomColumn, finalColumn)
+				);
+
+				Content.corridors.push(
+					new CorridorModel(
+						randomLine,
+						Math.min(randomColumn, finalColumn) + 2,
+						randomLine,
+						Math.max(randomColumn, finalColumn)
+					)
+				);
 			}
 		} else if (directions.indexOf('L') > -1) {
 			const finalColumn = randomColumn - width;
+
+			let hasRoomForCorridor,
+				hasOnlyWallsAroundCorridor;
 
 			if (finalColumn <= 1) {
 				return false;
 			}
 
-			if (Utils.scanRect(map, randomLine, Math.min(randomColumn, finalColumn), randomLine, Math.max(randomColumn, finalColumn) - 2, Tiles.wall) // If there's room for the corridor
-				&& Utils.scanRect(map, randomLine - 1, Math.min(randomColumn, finalColumn), randomLine + 1, Math.max(randomColumn, finalColumn) - 2, Tiles.wall)) { // If there is onyl wall on the sides of the corridor
+			hasRoomForCorridor = Utils.scanRect(
+				map,
+				randomLine,
+				Math.min(randomColumn, finalColumn),
+				randomLine,
+				Math.max(randomColumn, finalColumn) - 2,
+				Tiles.wall
+			);
 
+			hasOnlyWallsAroundCorridor = Utils.scanRect(
+				map,
+				randomLine - 1,
+				Math.min(randomColumn, finalColumn),
+				randomLine + 1,
+				Math.max(randomColumn, finalColumn) - 2,
+				Tiles.wall
+			);
+
+			if (hasRoomForCorridor && hasOnlyWallsAroundCorridor) {
 				// -1 and -2 to draw the door and not override it
-				map = Utils.fillRect(Tiles.door, map, randomLine, Math.min(randomColumn, finalColumn), randomLine, Math.max(randomColumn, finalColumn) - 1);
-				map = Utils.fillRect(Tiles.floor, map, randomLine, Math.min(randomColumn, finalColumn), randomLine, Math.max(randomColumn, finalColumn) - 2);
-				Content.corridors.push(new CorridorModel(randomLine, Math.min(randomColumn, finalColumn), randomLine, Math.max(randomColumn, finalColumn) - 2));
+				map = Utils.fillRect(
+					Tiles.door,
+					map,
+					randomLine,
+					Math.min(randomColumn, finalColumn),
+					randomLine,
+					Math.max(randomColumn, finalColumn) - 1
+				);
+
+				map = Utils.fillRect(
+					Tiles.floor,
+					map,
+					randomLine,
+					Math.min(randomColumn, finalColumn),
+					randomLine,
+					Math.max(randomColumn, finalColumn) - 2
+				);
+
+				Content.corridors.push(
+					new CorridorModel(
+						randomLine,
+						Math.min(randomColumn, finalColumn),
+						randomLine,
+						Math.max(randomColumn, finalColumn) - 2
+					)
+				);
 			}
 		}
 

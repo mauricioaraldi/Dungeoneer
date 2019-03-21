@@ -19,11 +19,11 @@ const Print = (function() {
 
 		canvas.height = Values.lines * Values.tileSize;
 		canvas.width = Values.columns * Values.tileSize;
-			
-		map.forEach(function(line, l) {
-			line.forEach(function(tile, c) {
+
+		map.forEach((line, l) => {
+			line.forEach((tile, c) => {
 				let type;
-				
+
 				switch (tile) {
 					case Tiles.wall:
 						type = 'wall';
@@ -48,7 +48,7 @@ const Print = (function() {
 					default:
 						type = 'empty';
 				}
-				
+
 				drawTile(type, c * Values.tileSize, l * Values.tileSize, ctx);
 			});
 		});
@@ -72,9 +72,9 @@ const Print = (function() {
 	function drawTile(type, x, y, ctx) {
 		const url = `resources/images/tiles/${type}.png`,
 			image = new Image();
-			
+
 		image.src = url;
-		
+
 		image.onload = () => ctx.drawImage(image, x, y, Values.tileSize, Values.tileSize);
 	}
 
@@ -91,20 +91,20 @@ const Print = (function() {
 			body = document.querySelector('body');
 
 		div.css({
-			'margin' : '10px',
-			'font-size' : '20px',
-			'line-height' : '16px'
+			margin: '10px',
+			'font-size': '20px',
+			'line-height': '16px'
 		});
 
 		for (const l in map) {
 			const line = map[l];
-			
+
 			div.appendChild(line)
-				  .appendChild('</br>');
+				.appendChild('</br>');
 		}
 
 		body.innerHTML = '';
-		body.appendChild(div);	
+		body.appendChild(div);
 	}
 
 	return {

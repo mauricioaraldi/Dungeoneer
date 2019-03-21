@@ -22,8 +22,8 @@ const Room = (() => {
 			width = Utils.numberBetween(Values.roomMinWidth, Values.roomMaxWidth),
 			height = Utils.numberBetween(Values.roomMinHeight, Values.roomMaxHeight);
 
-		Utils.fillRect(Tiles.floor, map, line, column, line+width, column+height);
-		Content.rooms.push( new RoomModel(line, column, line+width, column+height) );
+		Utils.fillRect(Tiles.floor, map, line, column, line + width, column + height);
+		Content.rooms.push(new RoomModel(line, column, line + width, column + height));
 
 		return map;
 	}
@@ -39,8 +39,8 @@ const Room = (() => {
 	 * @param {integer} [height] The height of the room to be generated.
 	 */
 	function generateRoom(map, width, height) {
-		const realWidth = width + 2, //Room Width + Walls
-			realHeight = height + 2, //Room Height + Walls
+		const realWidth = width + 2, // Room Width + Walls
+			realHeight = height + 2, // Room Height + Walls
 			[randomLine, randomColumn] = Utils.getRandomValidCordinates(map);
 
 		if (!width) {
@@ -85,7 +85,7 @@ const Room = (() => {
 				return false;
 			}
 
-			if (directions.indexOf('R') > -1) { //RIGHT
+			if (directions.indexOf('R') > -1) {
 				finalWidth = randomColumn - realWidth;
 				x = -3; // 2 for walls, 1 for space itself
 				roomX = -2;
@@ -94,23 +94,23 @@ const Room = (() => {
 				x = 2; //  for the walls
 				roomX = 2;
 			}
-			
+
 			if (Utils.verifyAround(map, randomLine, finalWidth, ['C'], Tiles.wall)) {
 				x += randomColumn;
 				roomX += randomColumn;
 			} else {
 				return false;
 			}
-			
+
 			if (Utils.scanRect(map, y - 1, x - 1, (y + height) + 1, (x + width) + 1, Tiles.wall)) {
 				map = Utils.fillRect(Tiles.door, map, roomY, roomX, roomY, roomX);
 				map = Utils.fillRect(Tiles.floor, map, y, x, y + height, x + width);
-				Content.rooms.push( new RoomModel(y, x, y + height, x + width) );
+				Content.rooms.push(new RoomModel(y, x, y + height, x + width));
 			}
-			
+
 			return map;
-		} 
-		
+		}
+
 		return false;
 	}
 

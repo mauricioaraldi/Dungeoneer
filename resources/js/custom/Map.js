@@ -6,7 +6,7 @@
  */
 const Map = (() => {
 	/**
-	 * Initiate the map
+	 * Initiate the map with only walls
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
@@ -22,7 +22,6 @@ const Map = (() => {
 			const line = [];
 
 			for (let c = 0; c < columns; c++) {
-				// Initialize cells with an wall
 				line.push(Tiles.wall);
 			}
 

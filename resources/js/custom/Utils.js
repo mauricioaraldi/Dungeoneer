@@ -7,25 +7,25 @@
 const Utils = (() => {
 	/**
 	 * Finds and return a number between two numers
-	 * 
+	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
-	 * 
+	 *
 	 * @param {integer} min The minimum limit for the number who will be generated
 	 * @param {integer} max The maximum limit for the number who will be generated
 	 * @return {integer} The generated number
 	 */
-	function numberBetween(min, max) { //TODO Find a better logic
+	function numberBetween(min, max) { // TODO Find a better logic
 		let num = Math.random(); // Generate random number
 
 		num = num * max; // Limitate it to the maximum
 		num = Math.floor(num) + min; // Adds the minimum
-		
+
 		// Verify if is not above the max
 		if (num > max) {
 			return max; // If it is, returns max itself
 		}
-		
+
 		return num;
 	}
 
@@ -42,7 +42,7 @@ const Utils = (() => {
 	function getRandomValidCordinates(map) {
 		const randomLine = Utils.numberBetween(0, map.length),
 			randomColumn = Utils.numberBetween(0, map[0].length);
-		
+
 		// Verify if the random cordinate is a floor tile
 		if (map[randomLine][randomColumn] === Tiles.floor) {
 			const directions = getValidDirections(map, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.wall);
@@ -70,16 +70,16 @@ const Utils = (() => {
 	 * @return {Array<String>} All expected and tested valid directions
 	 */
 	function getValidDirections(map, line, column, directionsToTest, expected) {
-		let returnDirections = []
+		const returnDirections = [];
 
-		for (let d in directionsToTest) {	
+		for (const d in directionsToTest) {
 			const direction = [directionsToTest[d]];
 
 			if (verifyAround(map, line, column, direction, expected)) {
 				returnDirections.push(direction[0]);
 			}
 		}
-		
+
 		return returnDirections;
 	}
 
@@ -100,7 +100,7 @@ const Utils = (() => {
 	function scanRect(map, initLine, initColumn, endLine, endColumn, expected) {
 		for (let l = initLine; l <= endLine; l++) {
 			for (let c = initColumn; c <= endColumn; c++) {
-				if (map[l][c] != expected) {
+				if (map[l][c] !== expected) {
 					return false;
 				}
 			}
@@ -123,73 +123,74 @@ const Utils = (() => {
 	 * @return {boolean} True if the scanned directions contains expected content
 	 */
 	function verifyAround(map, line, column, directions, expected) {
-		if ((line > 0 && line < Values.lines - 1)
-			&& (column > 0 && column < Values.columns - 1)) {
-
+		if (
+			(line > 0 && line < Values.lines - 1)
+			&& (column > 0 && column < Values.columns - 1)
+		) {
 			/* Top */
 			if (directions.indexOf('TL') > -1) {
-				if (map[line-1][column-1] != expected) {
+				if (map[line - 1][column - 1] !== expected) {
 					return false;
-				} 
+				}
 			}
 
 			if (directions.indexOf('T') > -1) {
-				if (map[line-1][column] != expected) {
+				if (map[line - 1][column] !== expected) {
 					return false;
-				} 
+				}
 			}
 
 			if (directions.indexOf('TR') > -1) {
-				if (map[line-1][column+1] != expected) {
+				if (map[line - 1][column + 1] !== expected) {
 					return false;
-				} 
+				}
 			}
 			/* End Top */
 
 			/* Middle */
 			if (directions.indexOf('L') > -1) {
-				if (map[line][column-1] != expected) {
+				if (map[line][column - 1] !== expected) {
 					return false;
-				} 
+				}
 			}
 
 			if (directions.indexOf('C') > -1) {
-				if (map[line][column] != expected) {
+				if (map[line][column] !== expected) {
 					return false;
-				} 
+				}
 			}
 
 			if (directions.indexOf('R') > -1) {
-				if (map[line][column+1] != expected) {
+				if (map[line][column + 1] !== expected) {
 					return false;
-				} 
+				}
 			}
 			/* End Middle */
 
 			/* Bottom */
 			if (directions.indexOf('BL') > -1) {
-				if (map[line+1][column-1] != expected) {
+				if (map[line + 1][column - 1] !== expected) {
 					return false;
-				} 
+				}
 			}
 
 			if (directions.indexOf('B') > -1) {
-				if (map[line+1][column] != expected) {
+				if (map[line + 1][column] !== expected) {
 					return false;
-				} 
+				}
 			}
 
 			if (directions.indexOf('BR') > -1) {
-				if (map[line+1][column+1] != expected) {
+				if (map[line + 1][column + 1] !== expected) {
 					return false;
-				} 
+				}
 			}
 			/* End Bottom */
 
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 	/**

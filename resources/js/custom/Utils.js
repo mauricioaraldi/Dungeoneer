@@ -16,14 +16,14 @@ const Utils = (() => {
 	 * @return {integer} The generated number
 	 */
 	function numberBetween(min, max) { //TODO Find a better logic
-		let num = Math.random(); //Generate random number
+		let num = Math.random(); // Generate random number
 
-		num = num * max; //Limitate it to the maximum
-		num = Math.floor(num) + min; //Adds the minimum
+		num = num * max; // Limitate it to the maximum
+		num = Math.floor(num) + min; // Adds the minimum
 		
-		//Verify if is not above the max
+		// Verify if is not above the max
 		if (num > max) {
-			return max; //If it is, returns max itself
+			return max; // If it is, returns max itself
 		}
 		
 		return num;
@@ -43,16 +43,16 @@ const Utils = (() => {
 		const randomLine = Utils.numberBetween(0, map.length),
 			randomColumn = Utils.numberBetween(0, map[0].length);
 		
-		//Verify if the random cordinate is a floor tile
-		if (map[randomLine][randomColumn] == Tiles.floor) {
+		// Verify if the random cordinate is a floor tile
+		if (map[randomLine][randomColumn] === Tiles.floor) {
 			const directions = getValidDirections(map, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.wall);
-			
+
 			if (directions.length > 0) {
 				return [randomLine, randomColumn];
 			}
 		}
-		
-		return false;
+
+		return getRandomValidCordinates(map);
 	}
 
 	/**
@@ -127,65 +127,65 @@ const Utils = (() => {
 			&& (column > 0 && column < Values.columns - 1)) {
 
 			/* Top */
-			if (directions.indexOf('TL') > -1) { //Top Left
+			if (directions.indexOf('TL') > -1) {
 				if (map[line-1][column-1] != expected) {
 					return false;
 				} 
 			}
-			
-			if (directions.indexOf('T') > -1) { //Top
+
+			if (directions.indexOf('T') > -1) {
 				if (map[line-1][column] != expected) {
 					return false;
 				} 
 			}
-			
-			if (directions.indexOf('TR') > -1) { //Top Right
+
+			if (directions.indexOf('TR') > -1) {
 				if (map[line-1][column+1] != expected) {
 					return false;
 				} 
 			}
 			/* End Top */
-			
+
 			/* Middle */
-			if (directions.indexOf('L') > -1) { //Left
+			if (directions.indexOf('L') > -1) {
 				if (map[line][column-1] != expected) {
 					return false;
 				} 
 			}
-			
-			if (directions.indexOf('C') > -1) { //Center
+
+			if (directions.indexOf('C') > -1) {
 				if (map[line][column] != expected) {
 					return false;
 				} 
 			}
-			
-			if (directions.indexOf('R') > -1) { //Right
+
+			if (directions.indexOf('R') > -1) {
 				if (map[line][column+1] != expected) {
 					return false;
 				} 
 			}
 			/* End Middle */
-			
+
 			/* Bottom */
-			if (directions.indexOf('BL') > -1) { //Bottom Left
+			if (directions.indexOf('BL') > -1) {
 				if (map[line+1][column-1] != expected) {
 					return false;
 				} 
 			}
-			
-			if (directions.indexOf('B') > -1) { //Bottom
+
+			if (directions.indexOf('B') > -1) {
 				if (map[line+1][column] != expected) {
 					return false;
 				} 
 			}
-			
-			if (directions.indexOf('BR') > -1) { //Bottom Right
+
+			if (directions.indexOf('BR') > -1) {
 				if (map[line+1][column+1] != expected) {
 					return false;
 				} 
 			}
 			/* End Bottom */
-			
+
 			return true;
 		} else {
 			return false;
@@ -211,7 +211,7 @@ const Utils = (() => {
 				map[l][c] = content;
 			}
 		}
-		
+
 		return map;
 	}
 
@@ -222,5 +222,5 @@ const Utils = (() => {
 		numberBetween,
 		scanRect,
 		verifyAround
-	}
+	};
 })();

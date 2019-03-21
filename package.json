@@ -1,0 +1,28 @@
+{
+	"name": "dungeoneer",
+	"version": "0.3.0",
+	"description": "A procedural dungeon generator",
+	"scripts": {
+		"lint": "./node_modules/.bin/eslint resources/js"
+	},
+	"keywords": [
+		"procedural",
+		"dungeon"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mauricioaraldi/Dungeoneer.git"
+	},
+	"author": {
+		"name": "Mauricio Araldi",
+		"url": "https://github.com/mauricioaraldi"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"bugs": {
+		"url": "https://github.com/mauricioaraldi/Dungeoneer/issues"
+	},
+	"homepage": "https://github.com/mauricioaraldi/Dungeoneer#readme",
+	"devDependencies": {
+		"eslint": "^5.15.3"
+	}
+}

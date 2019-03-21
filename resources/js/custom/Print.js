@@ -14,46 +14,46 @@ const Print = (function() {
 	 * @param {Array<Array<string>>} map The map to be printed
 	 */
 	function printColoredMapOnBody(map) {
-		var canvas = document.createElement('CANVAS'),
+		const canvas = document.createElement('CANVAS'),
 			ctx = canvas.getContext('2d');
 
-		//Adjust canvas width and height
 		canvas.height = Values.lines * Values.tileSize;
 		canvas.width = Values.columns * Values.tileSize;
 			
-		//Runs trough map
 		map.forEach(function(line, l) {
 			line.forEach(function(tile, c) {
-				var type;
+				let type;
 				
-				//Verify tile type
 				switch (tile) {
 					case Tiles.wall:
 						type = 'wall';
 						break;
+
 					case Tiles.floor:
 						type = 'floor';
 						break;
+
 					case Tiles.door:
 						type = 'door';
 						break;
+
 					case Tiles.stairDown:
 						type = 'stairDown';
-						break
+						break;
+
 					case Tiles.stairUp:
 						type = 'stairUp';
-						break
+						break;
+
 					default:
 						type = 'empty';
 				}
 				
-				//Draw tile
 				drawTile(type, c * Values.tileSize, l * Values.tileSize, ctx);
 			});
 		});
-		
-		//After all tiles have been drawned, append coloured map to body
-		setTimeout(function() {
+
+		setTimeout(() => {
 			document.querySelector('body').appendChild(canvas);
 		}, 100);
 	}
@@ -70,14 +70,12 @@ const Print = (function() {
 	 * @param {CanvasContext} canvas context to receive the drawning
 	 */
 	function drawTile(type, x, y, ctx) {
-		var url = 'resources/images/tiles/'+type+'.png',
+		const url = `resources/images/tiles/${type}.png`,
 			image = new Image();
 			
 		image.src = url;
 		
-		image.onload = function() {
-			ctx.drawImage(image, x, y, Values.tileSize, Values.tileSize);
-		};
+		image.onload = () => ctx.drawImage(image, x, y, Values.tileSize, Values.tileSize);
 	}
 
 	/**
@@ -89,33 +87,28 @@ const Print = (function() {
 	 * @param {Array<Array<string>>} map The map to be printed
 	 */
 	function printMapOnBody(map) {
-		var map = map,
-			divMap = document.createElement('DIV');
-			
-		//Style the div that will contain the map
-		divMap.css({
+		const div = document.createElement('DIV'),
+			body = document.querySelector('body');
+
+		div.css({
 			'margin' : '10px',
 			'font-size' : '20px',
 			'line-height' : '16px'
 		});
-		
-		//Runs trough map
-		for (var l in map) {
-			var line = map[l];
+
+		for (const l in map) {
+			const line = map[l];
 			
-			divMap.appendChild(line)
+			div.appendChild(line)
 				  .appendChild('</br>');
 		}
-		
-		//Clears body
-		document.querySelector('body').innerHTML = '';
 
-		//Append the div with the map
-		document.querySelector('body').appendChild(divMap);	
+		body.innerHTML = '';
+		body.appendChild(div);	
 	}
 
 	return {
 		printColoredMapOnBody,
 		printMapOnBody
-	}
+	};
 })();

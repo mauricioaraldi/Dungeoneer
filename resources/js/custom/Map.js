@@ -17,20 +17,18 @@ const Map = (() => {
 	 */
 	function initiateMap(lines, columns) {
 		const map = [];
-		
+
 		while (lines--) {
 			const line = [];
-			
+
 			for (let c = 0; c < columns; c++) {
-				const column = line[c];
-				
-				//Initialize cells with an wall
+				// Initialize cells with an wall
 				line.push(Tiles.wall);
 			}
-			
+
 			map.push(line);
 		}
-		
+
 		return map;
 	}
 
@@ -47,7 +45,7 @@ const Map = (() => {
 	 */
 	function generateMap(map, totalTries, currentTry = 0) {
 		const chance = Utils.numberBetween(1, 8);
-		
+
 		if (chance === 1) {
 			Corridor.generateCorridor(map);
 		} else if (chance >= 2) {
@@ -57,12 +55,12 @@ const Map = (() => {
 		if (++currentTry === totalTries) {
 			return map;
 		}
-		
+
 		return generateMap(map, totalTries, currentTry);
 	}
 
 	return {
 		initiateMap,
 		generateMap
-	}
+	};
 })();

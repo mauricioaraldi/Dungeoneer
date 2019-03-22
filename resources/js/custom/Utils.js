@@ -8,7 +8,7 @@
 const Utils = (() => {
 	/**
 	 * Finds and return a number between two numers
-	 *
+	 *TODO
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *
@@ -31,62 +31,88 @@ const Utils = (() => {
 	}
 
 	/**
-	 * Get random cordinates from dungeon, ensuring that they are valid
-	 * to generate a room or a corridor
+	 * Get random cordinate from dungeon, where something can be build. If there is at least
+	 * one building arealdy, start from it. If there's not, get a completely random coordinate;
 	 *
 	 * @author mauricio.araldi
-	 * @since 0.3.0
+	 * @since 0.4.0
 	 *
 	 * @param {Array<Array<string>>} dungeon The dungeon from where to get cordinates
 	 * @return {Array<integer>} Random valid cordinates from dungeon
 	 */
-	function getRandomValidCordinates(dungeon) {
-		const randomLine = Utils.numberBetween(0, dungeon.length),
-			randomColumn = Utils.numberBetween(0, dungeon[0].length);
-
-		// Verify if the random cordinate is a floor tile
-		if (dungeon[randomLine][randomColumn] === Tiles.floor) {
-			const directions = getValidDirections(dungeon, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.wall);
-
-			if (directions.length > 0) {
-				return [randomLine, randomColumn];
-			}
+	function getRandomBuildableArea(dungeon) {
+		if (!dungeon) {
+			throw Error('Parameter dungeon is required');
 		}
 
-		return getRandomValidCordinates(dungeon);
+		if (!Content.rooms.length) {
+			const randomLine = Utils.numberBetween(0, dungeon.length),
+				randomColumn = Utils.numberBetween(0, dungeon[0].length);
+
+			return new BuildableAreaModel(
+				randomLine,
+				randomColumn,
+				getBuildableDirections(dungeon, randomLine, randomColumn)
+			);
+		}
+
+		const possibleBuildableAreas = [],
+			buildings = [...Content.rooms, ...Content.corridors];
+
+		buildings.forEach(building => {
+			if (building.buildableAreas.length) {
+				possibleBuildableAreas.concat(building.buildableAreas);
+			}
+		});
+
+		console.log('buildings', buildings, possibleBuildableAreas);
+		return [1, 1];
+
+		// if (dungeon[randomLine][randomColumn] === Tiles.floor) {
+		// 	const directions = getValidDirections(dungeon, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.wall);
+
+		// 	if (directions.length > 0) {
+		// 		return [randomLine, randomColumn];
+		// 	}
+		// }
+
+		// return getRandomValidCordinates(dungeon);
 	}
 
 	/**
-	 * Get valid directions from a specific point of dungeon, accordingly
-	 * to what is expected
+	 * Get valid directions from a specific coordinate, accordingly to what is expected
 	 *
 	 * @author mauricio.araldi
-	 * @since 0.3.0
+	 * @since 0.4.0
 	 *
-	 * @param {Array<Array<string>>} dungeon The dungeon from where to get cordinates
+	 * @param {Array<Array<string>>} dungeon The dungeon which to be used to verify
 	 * @param {integer} line The line cordinate of position
 	 * @param {integer} column The column cordinate of position
-	 * @param {Array<String>} directionsToTest Directions to be verified
-	 * @param {Array<String>} expected Directions expected to be valid (at least one)
-	 * @return {Array<String>} All expected and tested valid directions
+	 * @param {Array<string>} [directionsToTest] Directions to be verified
+	 * @param {Array<string>} [expected] Tile which is considered valid
+	 * @return {Array<string>} All expected and tested valid directions
 	 */
-	function getValidDirections(dungeon, line, column, directionsToTest, expected) {
-		const returnDirections = [];
-
-		for (const d in directionsToTest) {
-			const direction = [directionsToTest[d]];
-
-			if (verifyAround(dungeon, line, column, direction, expected)) {
-				returnDirections.push(direction[0]);
-			}
+	function getBuildableDirections(dungeon, line, column, directionsToTest, expected = Tiles.wall) {
+		if (!directionsToTest || !directionsToTest.length) {
+			directionsToTest = [
+				Directions.BOTTOM,
+				Directions.BOTTOM_LEFT,
+				Directions.BOTTOM_RIGHT,
+				Directions.CENTER,
+				Directions.LEFT,
+				Directions.RIGHT,
+				Directions.TOP,
+				Directions.TOP_LEFT,
+				Directions.TOP_RIGHT
+			];
 		}
 
-		return returnDirections;
+		return directionsToTest.filter(direction => verifyAround(dungeon, line, column, direction, expected));
 	}
 
 	/**
 	 * Scans a rect veryfing if the content is what is expected
-	 *
+	 *TODO
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *
@@ -112,9 +138,9 @@ const Utils = (() => {
 
 	/**
 	 * Scans a square around a point (8 tiles) for expected content
-	 *
+	 *TODO
 	 * @author mauricio.araldi
-	 * @since 0.3.0
+	 * @since 0.4.0
 	 *
 	 * @param {Array<Array<string>>} dungeon The dungeon to be scanned
 	 * @param {integer} line Line number of point to be scanned
@@ -129,19 +155,19 @@ const Utils = (() => {
 			&& (column > 0 && column < Values.columns - 1)
 		) {
 			/* Top */
-			if (directions.indexOf('TL') > -1) {
+			if (directions.indexOf(Directions.TOP_LEFT) > -1) {
 				if (dungeon[line - 1][column - 1] !== expected) {
 					return false;
 				}
 			}
 
-			if (directions.indexOf('T') > -1) {
+			if (directions.indexOf(Directions.TOP) > -1) {
 				if (dungeon[line - 1][column] !== expected) {
 					return false;
 				}
 			}
 
-			if (directions.indexOf('TR') > -1) {
+			if (directions.indexOf(Directions.TOP_RIGHT) > -1) {
 				if (dungeon[line - 1][column + 1] !== expected) {
 					return false;
 				}
@@ -149,19 +175,19 @@ const Utils = (() => {
 			/* End Top */
 
 			/* Middle */
-			if (directions.indexOf('L') > -1) {
+			if (directions.indexOf(Directions.LEFT) > -1) {
 				if (dungeon[line][column - 1] !== expected) {
 					return false;
 				}
 			}
 
-			if (directions.indexOf('C') > -1) {
+			if (directions.indexOf(Directions.CENTER) > -1) {
 				if (dungeon[line][column] !== expected) {
 					return false;
 				}
 			}
 
-			if (directions.indexOf('R') > -1) {
+			if (directions.indexOf(Directions.RIGHT) > -1) {
 				if (dungeon[line][column + 1] !== expected) {
 					return false;
 				}
@@ -169,19 +195,19 @@ const Utils = (() => {
 			/* End Middle */
 
 			/* Bottom */
-			if (directions.indexOf('BL') > -1) {
+			if (directions.indexOf(Directions.BOTTOM_LEFT) > -1) {
 				if (dungeon[line + 1][column - 1] !== expected) {
 					return false;
 				}
 			}
 
-			if (directions.indexOf('B') > -1) {
+			if (directions.indexOf(Directions.BOTTOM) > -1) {
 				if (dungeon[line + 1][column] !== expected) {
 					return false;
 				}
 			}
 
-			if (directions.indexOf('BR') > -1) {
+			if (directions.indexOf(Directions.BOTTOM_RIGHT) > -1) {
 				if (dungeon[line + 1][column + 1] !== expected) {
 					return false;
 				}
@@ -198,7 +224,7 @@ const Utils = (() => {
 	 * Fills a rect with content
 	 *
 	 * @author mauricio.araldi
-	 *
+	 *TODO
 	 * @param {string} content The content to fill rect
 	 * @param {Array<Array<string>>} dungeon The dungeon where to get the area
 	 * @param {integer} initLine Initial line of rect
@@ -218,8 +244,8 @@ const Utils = (() => {
 	}
 
 	return {
-		getRandomValidCordinates,
-		getValidDirections,
+		getRandomBuildableArea,
+		getBuildableDirections,
 		fillRect,
 		numberBetween,
 		scanRect,

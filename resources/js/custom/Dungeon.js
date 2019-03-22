@@ -12,8 +12,8 @@ const Dungeon = (() => {
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *
-	 * @param {integer} lines The number of lines of the dungeon
-	 * @param {integer} columns The number of columns of the dungeon
+	 * @param {integer} lines The number of lines to generate
+	 * @param {integer} columns The number of columns to generate
 	 * @return {Array<Array<string>>} An empty dungeon
 	 */
 	function initiate(lines, columns) {
@@ -31,7 +31,7 @@ const Dungeon = (() => {
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
-	 *
+	 *TODO
 	 * @param {Array<Array<string>>} dungeon The dungeon to be filled
 	 * @param {integer} totalTries The number of tries before returning dungeon
 	 * @param {integer} [currentTry = 0] Current try

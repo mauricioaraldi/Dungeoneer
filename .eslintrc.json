@@ -78,9 +78,12 @@
 		"template-curly-spacing": ["error"]
 	},
 	"globals": {
+		"BuildableAreaModel": true,
+		"BuildingTypes": true,
 		"Content": true,
 		"Corridor": true,
 		"CorridorModel": true,
+		"Directions": true,
 		"Dungeon": true,
 		"Print": true,
 		"Room": true,

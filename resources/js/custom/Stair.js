@@ -11,7 +11,7 @@ const Stair = (() => {
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
-	 *
+	 *TODO
 	 * @param {Array<Array<string>>} dungeon The dungeon where to draw a stair down
 	 * @param {integer} totalTries Number of tries before timing out the generation
 	 * @param {integer} currentTry Number of current try
@@ -48,7 +48,7 @@ const Stair = (() => {
 
 	/**
 	 * Generates a stair up in dungeon
-	 *
+	 *TODO
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *

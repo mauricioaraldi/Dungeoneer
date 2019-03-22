@@ -7,24 +7,25 @@
 /* eslint-disable-next-line no-unused-vars */
 const Room = (() => {
 	/**
-	 * Generate the first room of the dungeon. This function needs to be separated
+	 * Generate the first room of the dungeon. This function is separated
 	 * because it needs to surely generate a room, with no errors.
 	 *
 	 * @author mauricio.araldi
-	 * @since 0.3.0
+	 * @since 0.4.0
 	 *
 	 * @param {Array<Array<string>>} dungeon The dungeon where the room will be generated.
 	 * @return {Array<Array<string>>} The dungeon with the room
 	 */
 	function generateFirstRoom(dungeon) {
-		// To ensure the position will be valid, get always the same position
-		const line = Math.floor(dungeon.length / 4),
-			column = Math.floor(dungeon[0].length / 4),
-			width = Utils.numberBetween(Values.roomMinWidth, Values.roomMaxWidth),
-			height = Utils.numberBetween(Values.roomMinHeight, Values.roomMaxHeight);
+		if (!dungeon) {
+			throw Error('Parameter dungeon is required');
+		}
 
-		Utils.fillRect(Tiles.floor, dungeon, line, column, line + width, column + height);
-		Content.rooms.push(new RoomModel(line, column, line + width, column + height));
+		let dungeonWithFirstRoom;
+
+		while (!dungeonWithFirstRoom) {
+			dungeonWithFirstRoom = generateRoom(dungeon);
+		}
 
 		return dungeon;
 	}
@@ -33,17 +34,13 @@ const Room = (() => {
 	 * Generate a new room on the dungeon
 	 *
 	 * @author mauricio.araldi
-	 * @since 0.3.0
-	 *
+	 * @since 0.4.0
+	 *TODO
 	 * @param {Array<Array<string>>} dungeon The dungeon where the room will be generated.
 	 * @param {integer} [width] The width of the room to be generated.
 	 * @param {integer} [height] The height of the room to be generated.
 	 */
 	function generateRoom(dungeon, width, height) {
-		const realWidth = width + 2, // Room Width + Walls
-			realHeight = height + 2, // Room Height + Walls
-			[randomLine, randomColumn] = Utils.getRandomValidCordinates(dungeon);
-
 		if (!width) {
 			width = Utils.numberBetween(Values.roomMinWidth, Values.roomMaxWidth);
 		}
@@ -52,12 +49,12 @@ const Room = (() => {
 			height = Utils.numberBetween(Values.roomMinHeight, Values.roomMaxHeight);
 		}
 
-		if (
-			(randomLine === undefined || randomColumn === undefined)
-			|| (realWidth < 0 || realHeight < 0)
-		) {
-			return false;
-		}
+		const realWidth = width + 2, // Room Width + Walls
+			realHeight = height + 2, // Room Height + Walls
+			buildableArea = Utils.getRandomBuildableArea(dungeon);
+
+		console.log(realWidth, realHeight, buildableArea);
+		return dungeon;
 
 		if (dungeon[randomLine][randomColumn] === Tiles.floor) {
 			const directions = Utils.getValidDirections(dungeon, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.wall);

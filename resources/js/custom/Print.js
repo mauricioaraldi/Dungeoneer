@@ -11,7 +11,7 @@ const Print = (function() {
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
-	 *
+	 *TODO
 	 * @param {Array<Array<string>>} dungeon The dungeon to be printed
 	 */
 	function printColoredDungeonOnBody(dungeon) {
@@ -65,7 +65,7 @@ const Print = (function() {
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
-	 *
+	 *TODO
 	 * @param {string} type Tile type
 	 * @param {integer} x position in canvas context
 	 * @param {integer} y position in canvas context
@@ -85,7 +85,7 @@ const Print = (function() {
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
-	 *
+	 *TODO
 	 * @param {Array<Array<string>>} dungeon The dungeon to be printed
 	 */
 	function printRawDungeonOnBody(dungeon) {
@@ -109,7 +109,7 @@ const Print = (function() {
 
 	/**
 	 * Prints a dungeon in the body of the page
-	 *
+	 *TODO
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *

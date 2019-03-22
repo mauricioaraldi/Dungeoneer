@@ -11,7 +11,7 @@ const Corridor = (() => {
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
-	 *
+	 *TODO
 	 * @param {Array<Array<string>>} dungeon The dungeon where the corridor will be generated.
 	 */
 	function generateCorridor(dungeon) {

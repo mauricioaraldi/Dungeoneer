@@ -7,15 +7,15 @@
 /* eslint-disable-next-line no-unused-vars */
 const Corridor = (() => {
 	/**
-	 * Generate a new corridor on the map
+	 * Generate a new corridor on the dungeon
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *
-	 * @param {Array<Array<string>>} map The map where the corridor will be generated.
+	 * @param {Array<Array<string>>} dungeon The dungeon where the corridor will be generated.
 	 */
-	function generateCorridor(map) {
-		const [randomLine, randomColumn] = Utils.getRandomValidCordinates(map);
+	function generateCorridor(dungeon) {
+		const [randomLine, randomColumn] = Utils.getRandomValidCordinates(dungeon);
 
 		let width,
 			height;
@@ -24,7 +24,7 @@ const Corridor = (() => {
 			return false;
 		}
 
-		const directions = Utils.getValidDirections(map, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.wall);
+		const directions = Utils.getValidDirections(dungeon, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.wall);
 
 		if (directions.indexOf('T') > -1 || directions.indexOf('B') > -1) {
 			height = Utils.numberBetween(Values.roomMinHeight, Values.roomMaxHeight);
@@ -40,7 +40,7 @@ const Corridor = (() => {
 			}
 
 			const hasRoomForCorridor = Utils.scanRect(
-					map,
+					dungeon,
 					Math.min(randomLine, finalLine),
 					randomColumn,
 					Math.max(randomLine, finalLine) - 2,
@@ -48,7 +48,7 @@ const Corridor = (() => {
 					Tiles.wall
 				),
 				hasOnlyWallsAroundCorridor = Utils.scanRect(
-					map,
+					dungeon,
 					Math.min(randomLine, finalLine),
 					randomColumn - 1,
 					Math.max(randomLine, finalLine) - 2,
@@ -58,18 +58,18 @@ const Corridor = (() => {
 
 			if (hasRoomForCorridor && hasOnlyWallsAroundCorridor) {
 				// -1 and -2 to draw the door and not override it
-				map = Utils.fillRect(
+				dungeon = Utils.fillRect(
 					Tiles.door,
-					map,
+					dungeon,
 					Math.max(randomLine, finalLine) - 1,
 					randomColumn,
 					Math.max(randomLine, finalLine) - 1,
 					randomColumn
 				);
 
-				map = Utils.fillRect(
+				dungeon = Utils.fillRect(
 					Tiles.floor,
-					map,
+					dungeon,
 					Math.min(randomLine, finalLine),
 					randomColumn,
 					Math.max(randomLine, finalLine) - 2,
@@ -93,7 +93,7 @@ const Corridor = (() => {
 			}
 
 			const hasRoomForCorridor = Utils.scanRect(
-					map,
+					dungeon,
 					Math.min(randomLine, finalLine) + 2,
 					randomColumn,
 					Math.max(randomLine, finalLine),
@@ -101,7 +101,7 @@ const Corridor = (() => {
 					Tiles.wall
 				),
 				hasOnlyWallsAroundCorridor = Utils.scanRect(
-					map,
+					dungeon,
 					Math.min(randomLine, finalLine) + 2,
 					randomColumn - 1,
 					Math.max(randomLine, finalLine),
@@ -111,18 +111,18 @@ const Corridor = (() => {
 
 			if (hasRoomForCorridor && hasOnlyWallsAroundCorridor) {
 				// +1 and +2 to draw the door and not override it
-				map = Utils.fillRect(
+				dungeon = Utils.fillRect(
 					Tiles.door,
-					map,
+					dungeon,
 					Math.min(randomLine, finalLine) + 1,
 					randomColumn,
 					Math.min(randomLine, finalLine) + 1,
 					randomColumn
 				);
 
-				map = Utils.fillRect(
+				dungeon = Utils.fillRect(
 					Tiles.floor,
-					map,
+					dungeon,
 					Math.min(randomLine, finalLine) + 2,
 					randomColumn,
 					Math.max(randomLine, finalLine),
@@ -146,7 +146,7 @@ const Corridor = (() => {
 			}
 
 			const hasRoomForCorridor = Utils.scanRect(
-					map,
+					dungeon,
 					randomLine,
 					Math.min(randomColumn, finalColumn) + 2,
 					randomLine,
@@ -154,7 +154,7 @@ const Corridor = (() => {
 					Tiles.wall
 				),
 				hasOnlyWallsAroundCorridor = Utils.scanRect(
-					map,
+					dungeon,
 					randomLine - 1,
 					Math.min(randomColumn, finalColumn) + 2,
 					randomLine + 1,
@@ -164,18 +164,18 @@ const Corridor = (() => {
 
 			if (hasRoomForCorridor && hasOnlyWallsAroundCorridor) {
 				// +1 and +2 to draw the door and not override it
-				map = Utils.fillRect(
+				dungeon = Utils.fillRect(
 					Tiles.door,
-					map,
+					dungeon,
 					randomLine,
 					Math.min(randomColumn, finalColumn) + 1,
 					randomLine,
 					Math.max(randomColumn, finalColumn)
 				);
 
-				map = Utils.fillRect(
+				dungeon = Utils.fillRect(
 					Tiles.floor,
-					map,
+					dungeon,
 					randomLine,
 					Math.min(randomColumn, finalColumn) + 2,
 					randomLine,
@@ -199,7 +199,7 @@ const Corridor = (() => {
 			}
 
 			const hasRoomForCorridor = Utils.scanRect(
-					map,
+					dungeon,
 					randomLine,
 					Math.min(randomColumn, finalColumn),
 					randomLine,
@@ -207,7 +207,7 @@ const Corridor = (() => {
 					Tiles.wall
 				),
 				hasOnlyWallsAroundCorridor = Utils.scanRect(
-					map,
+					dungeon,
 					randomLine - 1,
 					Math.min(randomColumn, finalColumn),
 					randomLine + 1,
@@ -217,18 +217,18 @@ const Corridor = (() => {
 
 			if (hasRoomForCorridor && hasOnlyWallsAroundCorridor) {
 				// -1 and -2 to draw the door and not override it
-				map = Utils.fillRect(
+				dungeon = Utils.fillRect(
 					Tiles.door,
-					map,
+					dungeon,
 					randomLine,
 					Math.min(randomColumn, finalColumn),
 					randomLine,
 					Math.max(randomColumn, finalColumn) - 1
 				);
 
-				map = Utils.fillRect(
+				dungeon = Utils.fillRect(
 					Tiles.floor,
-					map,
+					dungeon,
 					randomLine,
 					Math.min(randomColumn, finalColumn),
 					randomLine,
@@ -246,7 +246,7 @@ const Corridor = (() => {
 			}
 		}
 
-		return map;
+		return dungeon;
 	}
 
 	return {

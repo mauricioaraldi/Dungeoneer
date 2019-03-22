@@ -7,21 +7,21 @@
 /* eslint-disable-next-line no-unused-vars */
 const Print = (function() {
 	/**
-	 * Print a coloured map on body
+	 * Print a coloured dungeon on body
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *
-	 * @param {Array<Array<string>>} map The map to be printed
+	 * @param {Array<Array<string>>} dungeon The dungeon to be printed
 	 */
-	function printColoredMapOnBody(map) {
+	function printColoredDungeonOnBody(dungeon) {
 		const canvas = document.createElement('CANVAS'),
 			ctx = canvas.getContext('2d');
 
 		canvas.height = Values.lines * Values.tileSize;
 		canvas.width = Values.columns * Values.tileSize;
 
-		map.forEach((line, l) => {
+		dungeon.forEach((line, l) => {
 			line.forEach((tile, c) => {
 				let type;
 
@@ -81,24 +81,24 @@ const Print = (function() {
 	}
 
 	/**
-	 * Print a raw map on body
+	 * Print a raw dungeon on body
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *
-	 * @param {Array<Array<string>>} map The map to be printed
+	 * @param {Array<Array<string>>} dungeon The dungeon to be printed
 	 */
-	function printRawMapOnBody(map) {
+	function printRawDungeonOnBody(dungeon) {
 		const div = document.createElement('DIV'),
 			body = document.querySelector('body');
 
-		div.setAttribute('id', 'rawMapContainer');
+		div.setAttribute('id', 'rawDungeonContainer');
 
-		for (const l in map) {
+		for (const l in dungeon) {
 			const line = document.createElement('SPAN'),
 				br = document.createElement('BR');
 
-			line.textContent = map[l].join('');
+			line.textContent = dungeon[l].join('');
 
 			div.appendChild(line).appendChild(br);
 		}
@@ -108,24 +108,23 @@ const Print = (function() {
 	}
 
 	/**
-	 * Prints a map in the body of the page
+	 * Prints a dungeon in the body of the page
 	 * 
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 * 
-	 * @param {Array<Array<string>>} map The map to be printed
-	 * @param {boolean} [colored = true] If the map should be printed as canvas or ASCII
+	 * @param {Array<Array<string>>} dungeon The dungeon to be printed
+	 * @param {boolean} [colored = true] If the dungeon should be printed as canvas or ASCII
 	 */
-	function printMapOnBody(map, colored = true) {
+	function printDungeonOnBody(dungeon, colored = true) {
 		if (colored) {
-			return printColoredMapOnBody(map);
+			return printColoredDungeonOnBody(dungeon);
 		}
 
-		return printRawMapOnBody(map)
+		return printRawDungeonOnBody(dungeon)
 	}
 
 	return {
-		printColoredMapOnBody,
-		printMapOnBody
+		printDungeonOnBody
 	};
 })();

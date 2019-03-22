@@ -81,7 +81,7 @@
 		"Content": true,
 		"Corridor": true,
 		"CorridorModel": true,
-		"Mapper": true,
+		"Dungeon": true,
 		"Print": true,
 		"Room": true,
 		"RoomModel": true,

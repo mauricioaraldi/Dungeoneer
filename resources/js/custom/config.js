@@ -1,6 +1,6 @@
 ﻿/* eslint-disable-next-line no-unused-vars */
 const Values = {
-		map: [],
+		dungeon: [],
 		lines: 47,
 		columns: 95,
 		roomMinWidth: 2,

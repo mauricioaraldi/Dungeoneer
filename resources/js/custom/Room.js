@@ -7,42 +7,42 @@
 /* eslint-disable-next-line no-unused-vars */
 const Room = (() => {
 	/**
-	 * Generate the first room of the map. This function needs to be separated
+	 * Generate the first room of the dungeon. This function needs to be separated
 	 * because it needs to surely generate a room, with no errors.
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *
-	 * @param {Array<Array<string>>} map The map where the room will be generated.
-	 * @return {Array<Array<string>>} The map with the room
+	 * @param {Array<Array<string>>} dungeon The dungeon where the room will be generated.
+	 * @return {Array<Array<string>>} The dungeon with the room
 	 */
-	function generateFirstRoom(map) {
+	function generateFirstRoom(dungeon) {
 		// To ensure the position will be valid, get always the same position
-		const line = Math.floor(map.length / 4),
-			column = Math.floor(map[0].length / 4),
+		const line = Math.floor(dungeon.length / 4),
+			column = Math.floor(dungeon[0].length / 4),
 			width = Utils.numberBetween(Values.roomMinWidth, Values.roomMaxWidth),
 			height = Utils.numberBetween(Values.roomMinHeight, Values.roomMaxHeight);
 
-		Utils.fillRect(Tiles.floor, map, line, column, line + width, column + height);
+		Utils.fillRect(Tiles.floor, dungeon, line, column, line + width, column + height);
 		Content.rooms.push(new RoomModel(line, column, line + width, column + height));
 
-		return map;
+		return dungeon;
 	}
 
 	/**
-	 * Generate a new room on the map
+	 * Generate a new room on the dungeon
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *
-	 * @param {Array<Array<string>>} map The map where the room will be generated.
+	 * @param {Array<Array<string>>} dungeon The dungeon where the room will be generated.
 	 * @param {integer} [width] The width of the room to be generated.
 	 * @param {integer} [height] The height of the room to be generated.
 	 */
-	function generateRoom(map, width, height) {
+	function generateRoom(dungeon, width, height) {
 		const realWidth = width + 2, // Room Width + Walls
 			realHeight = height + 2, // Room Height + Walls
-			[randomLine, randomColumn] = Utils.getRandomValidCordinates(map);
+			[randomLine, randomColumn] = Utils.getRandomValidCordinates(dungeon);
 
 		if (!width) {
 			width = Utils.numberBetween(Values.roomMinWidth, Values.roomMaxWidth);
@@ -59,8 +59,8 @@ const Room = (() => {
 			return false;
 		}
 
-		if (map[randomLine][randomColumn] === Tiles.floor) {
-			const directions = Utils.getValidDirections(map, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.wall);
+		if (dungeon[randomLine][randomColumn] === Tiles.floor) {
+			const directions = Utils.getValidDirections(dungeon, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.wall);
 
 			let finalHeight,
 				finalWidth,
@@ -79,7 +79,7 @@ const Room = (() => {
 				roomY = 1;
 			}
 
-			if (map[finalHeight] !== undefined && Utils.verifyAround(map, finalHeight, randomColumn, ['C'], Tiles.wall)) {
+			if (dungeon[finalHeight] !== undefined && Utils.verifyAround(dungeon, finalHeight, randomColumn, ['C'], Tiles.wall)) {
 				y += randomLine;
 				roomY += randomLine;
 			} else {
@@ -96,20 +96,20 @@ const Room = (() => {
 				roomX = 2;
 			}
 
-			if (Utils.verifyAround(map, randomLine, finalWidth, ['C'], Tiles.wall)) {
+			if (Utils.verifyAround(dungeon, randomLine, finalWidth, ['C'], Tiles.wall)) {
 				x += randomColumn;
 				roomX += randomColumn;
 			} else {
 				return false;
 			}
 
-			if (Utils.scanRect(map, y - 1, x - 1, (y + height) + 1, (x + width) + 1, Tiles.wall)) {
-				map = Utils.fillRect(Tiles.door, map, roomY, roomX, roomY, roomX);
-				map = Utils.fillRect(Tiles.floor, map, y, x, y + height, x + width);
+			if (Utils.scanRect(dungeon, y - 1, x - 1, (y + height) + 1, (x + width) + 1, Tiles.wall)) {
+				dungeon = Utils.fillRect(Tiles.door, dungeon, roomY, roomX, roomY, roomX);
+				dungeon = Utils.fillRect(Tiles.floor, dungeon, y, x, y + height, x + width);
 				Content.rooms.push(new RoomModel(y, x, y + height, x + width));
 			}
 
-			return map;
+			return dungeon;
 		}
 
 		return false;

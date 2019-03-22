@@ -7,16 +7,16 @@
 /* eslint-disable-next-line no-unused-vars */
 const Stair = (() => {
 	/**
-	 * Generates a stair down in map
+	 * Generates a stair down in dungeon
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *
-	 * @param {Array<Array<string>>} map The map where to draw a stair down
+	 * @param {Array<Array<string>>} dungeon The dungeon where to draw a stair down
 	 * @param {integer} totalTries Number of tries before timing out the generation
 	 * @param {integer} currentTry Number of current try
 	 */
-	function generateStairDown(map, totalTries, currentTry) {
+	function generateStairDown(dungeon, totalTries, currentTry) {
 		// Controls the generation timeout
 		if (currentTry === undefined) {
 			currentTry = 0;
@@ -25,38 +25,38 @@ const Stair = (() => {
 		}
 
 		// Get random position
-		const randomLine = Utils.numberBetween(0, map.length),
-			randomColumn = Utils.numberBetween(0, map[0].length);
+		const randomLine = Utils.numberBetween(0, dungeon.length),
+			randomColumn = Utils.numberBetween(0, dungeon[0].length);
 
 		// Verify if random position is a valid position for the stair down
-		if (map[randomLine][randomColumn] === Tiles.floor) {
+		if (dungeon[randomLine][randomColumn] === Tiles.floor) {
 			// Verify floor tiles around random position
-			const directions = Utils.getValidDirections(map, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.floor);
+			const directions = Utils.getValidDirections(dungeon, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.floor);
 
 			// If there is at least one floor tile, is valid
 			if (directions.length > 0) {
-				map[randomLine][randomColumn] = Tiles.stairDown;
+				dungeon[randomLine][randomColumn] = Tiles.stairDown;
 			} else {
-				return generateStairDown(map, totalTries, ++currentTry);
+				return generateStairDown(dungeon, totalTries, ++currentTry);
 			}
 		} else {
-			return generateStairDown(map, totalTries, ++currentTry);
+			return generateStairDown(dungeon, totalTries, ++currentTry);
 		}
 
-		return map;
+		return dungeon;
 	}
 
 	/**
-	 * Generates a stair up in map
+	 * Generates a stair up in dungeon
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *
-	 * @param {Array<Array<string>>} map The map where to draw a stair up
+	 * @param {Array<Array<string>>} dungeon The dungeon where to draw a stair up
 	 * @param {integer} totalTries Number of tries before timing out the generation
 	 * @param {integer} currentTry Number of current try
 	 */
-	function generateStairUp(map, totalTries, currentTry) {
+	function generateStairUp(dungeon, totalTries, currentTry) {
 		// Controls the generation timeout
 		if (currentTry === undefined) {
 			currentTry = 0;
@@ -65,13 +65,13 @@ const Stair = (() => {
 		}
 
 		// Get random position
-		const randomLine = Utils.numberBetween(0, map.length),
-			randomColumn = Utils.numberBetween(0, map[0].length);
+		const randomLine = Utils.numberBetween(0, dungeon.length),
+			randomColumn = Utils.numberBetween(0, dungeon[0].length);
 
 		// Verify if random position is a valid position for the stair up
-		if (map[randomLine][randomColumn] === Tiles.floor) {
+		if (dungeon[randomLine][randomColumn] === Tiles.floor) {
 			// 	Verify floor tiles around random position
-			const directions = Utils.getValidDirections(map, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.floor);
+			const directions = Utils.getValidDirections(dungeon, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.floor);
 
 			// If there is at least one floor tile, is valid
 			if (directions.length > 0) {
@@ -82,13 +82,13 @@ const Stair = (() => {
 					endLine = randomLine + Values.roomMaxHeight,
 					hasStairDown = false;
 
-				endColumn = endColumn > map[0].length - 1 ? map[0].length - 1 : endColumn;
-				endLine = endLine > map.length - 1 ? map.length - 1 : endLine;
+				endColumn = endColumn > dungeon[0].length - 1 ? dungeon[0].length - 1 : endColumn;
+				endLine = endLine > dungeon.length - 1 ? dungeon.length - 1 : endLine;
 
 				// Verify stair bounds, to see if there is at least one max room size of distance from stair down
 				for (let l = initLine; l <= endLine; l++) {
 					for (let c = initColumn; c <= endColumn; c++) {
-						if (map[l][c] === Tiles.stairDown) {
+						if (dungeon[l][c] === Tiles.stairDown) {
 							hasStairDown = true;
 						}
 					}
@@ -96,18 +96,18 @@ const Stair = (() => {
 
 				// If the position is valid, generate room
 				if (!hasStairDown) {
-					map[randomLine][randomColumn] = Tiles.stairUp;
+					dungeon[randomLine][randomColumn] = Tiles.stairUp;
 				} else {
-					return generateStairUp(map, totalTries, ++currentTry);
+					return generateStairUp(dungeon, totalTries, ++currentTry);
 				}
 			} else {
-				return generateStairUp(map, totalTries, ++currentTry);
+				return generateStairUp(dungeon, totalTries, ++currentTry);
 			}
 		} else {
-			return generateStairUp(map, totalTries, ++currentTry);
+			return generateStairUp(dungeon, totalTries, ++currentTry);
 		}
 
-		return map;
+		return dungeon;
 	}
 
 	return {

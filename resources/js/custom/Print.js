@@ -109,10 +109,10 @@ const Print = (function() {
 
 	/**
 	 * Prints a dungeon in the body of the page
-	 * 
+	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
-	 * 
+	 *
 	 * @param {Array<Array<string>>} dungeon The dungeon to be printed
 	 * @param {boolean} [colored = true] If the dungeon should be printed as canvas or ASCII
 	 */
@@ -121,7 +121,7 @@ const Print = (function() {
 			return printColoredDungeonOnBody(dungeon);
 		}
 
-		return printRawDungeonOnBody(dungeon)
+		return printRawDungeonOnBody(dungeon);
 	}
 
 	return {

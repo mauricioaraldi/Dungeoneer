@@ -5,7 +5,7 @@
  * @since 0.3.0
  */
 /* eslint-disable-next-line no-unused-vars */
-const Map = (() => {
+const Mapper = (() => {
 	/**
 	 * Initiate the map with only walls
 	 *

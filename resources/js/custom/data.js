@@ -1,9 +1,9 @@
 ﻿window.onload = () => {
-	Values.map = Map.initiateMap(Values.lines, Values.columns);
+	Values.map = Mapper.initiateMap(Values.lines, Values.columns);
 
 	Values.map = Room.generateFirstRoom(Values.map);
 
-	Values.map = Map.generateMap(Values.map, 2000);
+	Values.map = Mapper.generateMap(Values.map, 2000);
 
 	Values.map = Stair.generateStairDown(Values.map, 500);
 

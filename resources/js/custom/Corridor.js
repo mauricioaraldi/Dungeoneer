@@ -4,6 +4,7 @@
  * @author mauricio.araldi
  * @since 0.3.0
  */
+/* eslint-disable-next-line no-unused-vars */
 const Corridor = (() => {
 	/**
 	 * Generate a new corridor on the map

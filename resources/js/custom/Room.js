@@ -2,8 +2,9 @@
  * This module controls stair interactions
  *
  * @author mauricio.araldi
- * @since 22/06/2015
+ * @since 0.3.0
  */
+/* eslint-disable-next-line no-unused-vars */
 const Room = (() => {
 	/**
 	 * Generate the first room of the map. This function needs to be separated

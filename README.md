@@ -1,4 +1,4 @@
-# Dungeoneers
+# Dungeoneers 0.4.0
 
 A procedural dungeon generator
 

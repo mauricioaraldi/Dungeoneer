@@ -16,15 +16,14 @@ const Corridor = (() => {
 	function generateCorridor(map) {
 		const [randomLine, randomColumn] = Utils.getRandomValidCordinates(map);
 
-		let directions,
-			width,
+		let width,
 			height;
 
 		if (randomLine === undefined || randomColumn === undefined) {
 			return false;
 		}
 
-		directions = Utils.getValidDirections(map, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.wall);
+		const directions = Utils.getValidDirections(map, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.wall);
 
 		if (directions.indexOf('T') > -1 || directions.indexOf('B') > -1) {
 			height = Utils.numberBetween(Values.roomMinHeight, Values.roomMaxHeight);
@@ -35,30 +34,26 @@ const Corridor = (() => {
 		if (directions.indexOf('T') > -1) {
 			const finalLine = randomLine - height;
 
-			let hasRoomForCorridor,
-				hasOnlyWallsAroundCorridor;
-
 			if (finalLine <= 1) {
 				return false;
 			}
 
-			hasRoomForCorridor = Utils.scanRect(
-				map,
-				Math.min(randomLine, finalLine),
-				randomColumn,
-				Math.max(randomLine, finalLine) - 2,
-				randomColumn,
-				Tiles.wall
-			);
-
-			hasOnlyWallsAroundCorridor = Utils.scanRect(
-				map,
-				Math.min(randomLine, finalLine),
-				randomColumn - 1,
-				Math.max(randomLine, finalLine) - 2,
-				randomColumn + 1,
-				Tiles.wall
-			);
+			const hasRoomForCorridor = Utils.scanRect(
+					map,
+					Math.min(randomLine, finalLine),
+					randomColumn,
+					Math.max(randomLine, finalLine) - 2,
+					randomColumn,
+					Tiles.wall
+				),
+				hasOnlyWallsAroundCorridor = Utils.scanRect(
+					map,
+					Math.min(randomLine, finalLine),
+					randomColumn - 1,
+					Math.max(randomLine, finalLine) - 2,
+					randomColumn + 1,
+					Tiles.wall
+				);
 
 			if (hasRoomForCorridor && hasOnlyWallsAroundCorridor) {
 				// -1 and -2 to draw the door and not override it
@@ -92,30 +87,26 @@ const Corridor = (() => {
 		} else if (directions.indexOf('B') > -1) {
 			const finalLine = randomLine + height;
 
-			let hasRoomForCorridor,
-				hasOnlyWallsAroundCorridor;
-
 			if (finalLine >= Values.lines - 2) {
 				return false;
 			}
 
-			hasRoomForCorridor = Utils.scanRect(
-				map,
-				Math.min(randomLine, finalLine) + 2,
-				randomColumn,
-				Math.max(randomLine, finalLine),
-				randomColumn,
-				Tiles.wall
-			);
-
-			hasOnlyWallsAroundCorridor = Utils.scanRect(
-				map,
-				Math.min(randomLine, finalLine) + 2,
-				randomColumn - 1,
-				Math.max(randomLine, finalLine),
-				randomColumn + 1,
-				Tiles.wall
-			);
+			const hasRoomForCorridor = Utils.scanRect(
+					map,
+					Math.min(randomLine, finalLine) + 2,
+					randomColumn,
+					Math.max(randomLine, finalLine),
+					randomColumn,
+					Tiles.wall
+				),
+				hasOnlyWallsAroundCorridor = Utils.scanRect(
+					map,
+					Math.min(randomLine, finalLine) + 2,
+					randomColumn - 1,
+					Math.max(randomLine, finalLine),
+					randomColumn + 1,
+					Tiles.wall
+				);
 
 			if (hasRoomForCorridor && hasOnlyWallsAroundCorridor) {
 				// +1 and +2 to draw the door and not override it
@@ -149,30 +140,26 @@ const Corridor = (() => {
 		} else if (directions.indexOf('R') > -1) {
 			const finalColumn = randomColumn + width;
 
-			let hasRoomForCorridor,
-				hasOnlyWallsAroundCorridor;
-
 			if (finalColumn >= Values.columns - 2) {
 				return false;
 			}
 
-			hasRoomForCorridor = Utils.scanRect(
-				map,
-				randomLine,
-				Math.min(randomColumn, finalColumn) + 2,
-				randomLine,
-				Math.max(randomColumn, finalColumn),
-				Tiles.wall
-			);
-
-			hasOnlyWallsAroundCorridor = Utils.scanRect(
-				map,
-				randomLine - 1,
-				Math.min(randomColumn, finalColumn) + 2,
-				randomLine + 1,
-				Math.max(randomColumn, finalColumn),
-				Tiles.wall
-			);
+			const hasRoomForCorridor = Utils.scanRect(
+					map,
+					randomLine,
+					Math.min(randomColumn, finalColumn) + 2,
+					randomLine,
+					Math.max(randomColumn, finalColumn),
+					Tiles.wall
+				),
+				hasOnlyWallsAroundCorridor = Utils.scanRect(
+					map,
+					randomLine - 1,
+					Math.min(randomColumn, finalColumn) + 2,
+					randomLine + 1,
+					Math.max(randomColumn, finalColumn),
+					Tiles.wall
+				);
 
 			if (hasRoomForCorridor && hasOnlyWallsAroundCorridor) {
 				// +1 and +2 to draw the door and not override it
@@ -206,30 +193,26 @@ const Corridor = (() => {
 		} else if (directions.indexOf('L') > -1) {
 			const finalColumn = randomColumn - width;
 
-			let hasRoomForCorridor,
-				hasOnlyWallsAroundCorridor;
-
 			if (finalColumn <= 1) {
 				return false;
 			}
 
-			hasRoomForCorridor = Utils.scanRect(
-				map,
-				randomLine,
-				Math.min(randomColumn, finalColumn),
-				randomLine,
-				Math.max(randomColumn, finalColumn) - 2,
-				Tiles.wall
-			);
-
-			hasOnlyWallsAroundCorridor = Utils.scanRect(
-				map,
-				randomLine - 1,
-				Math.min(randomColumn, finalColumn),
-				randomLine + 1,
-				Math.max(randomColumn, finalColumn) - 2,
-				Tiles.wall
-			);
+			const hasRoomForCorridor = Utils.scanRect(
+					map,
+					randomLine,
+					Math.min(randomColumn, finalColumn),
+					randomLine,
+					Math.max(randomColumn, finalColumn) - 2,
+					Tiles.wall
+				),
+				hasOnlyWallsAroundCorridor = Utils.scanRect(
+					map,
+					randomLine - 1,
+					Math.min(randomColumn, finalColumn),
+					randomLine + 1,
+					Math.max(randomColumn, finalColumn) - 2,
+					Tiles.wall
+				);
 
 			if (hasRoomForCorridor && hasOnlyWallsAroundCorridor) {
 				// -1 and -2 to draw the door and not override it

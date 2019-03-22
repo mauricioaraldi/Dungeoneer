@@ -1,3 +1,9 @@
 ﻿* {
 	margin: 0;
 }
+
+#rawMapContainer {
+	margin: 10px;
+	font-size: 20px;
+	line-height: 16px;
+}

@@ -9,6 +9,5 @@
 
 	Values.map = Stair.generateStairUp(Values.map, 500);
 
-	// Print.printMapOnBody(Values.map);
-	Print.printColoredMapOnBody(Values.map);
+	Print.printMapOnBody(Values.map);
 };

@@ -55,6 +55,7 @@ const Print = (function() {
 		});
 
 		setTimeout(() => {
+			document.querySelector('#loadingMessage').remove();
 			document.querySelector('body').appendChild(canvas);
 		}, 100);
 	}
@@ -87,25 +88,40 @@ const Print = (function() {
 	 *
 	 * @param {Array<Array<string>>} map The map to be printed
 	 */
-	function printMapOnBody(map) {
+	function printRawMapOnBody(map) {
 		const div = document.createElement('DIV'),
 			body = document.querySelector('body');
 
-		div.css({
-			margin: '10px',
-			'font-size': '20px',
-			'line-height': '16px'
-		});
+		div.setAttribute('id', 'rawMapContainer');
 
 		for (const l in map) {
-			const line = map[l];
+			const line = document.createElement('SPAN'),
+				br = document.createElement('BR');
 
-			div.appendChild(line)
-				.appendChild('</br>');
+			line.textContent = map[l].join('');
+
+			div.appendChild(line).appendChild(br);
 		}
 
 		body.innerHTML = '';
 		body.appendChild(div);
+	}
+
+	/**
+	 * Prints a map in the body of the page
+	 * 
+	 * @author mauricio.araldi
+	 * @since 0.3.0
+	 * 
+	 * @param {Array<Array<string>>} map The map to be printed
+	 * @param {boolean} [colored = true] If the map should be printed as canvas or ASCII
+	 */
+	function printMapOnBody(map, colored = true) {
+		if (colored) {
+			return printColoredMapOnBody(map);
+		}
+
+		return printRawMapOnBody(map)
 	}
 
 	return {

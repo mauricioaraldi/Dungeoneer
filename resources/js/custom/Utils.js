@@ -38,22 +38,30 @@ const Utils = (() => {
 	 * @since 0.4.0
 	 *
 	 * @param {Array<Array<string>>} dungeon The dungeon from where to get cordinates
+	 * @param {integer} [width] Width of the building
+	 * @param {integer} [height] Height of the building
 	 * @return {Array<integer>} Random valid cordinates from dungeon
 	 */
-	function getRandomBuildableArea(dungeon) {
+	function getRandomBuildableCoordinate(dungeon, width, height) {
 		if (!dungeon) {
 			throw Error('Parameter dungeon is required');
 		}
 
 		if (!Content.rooms.length) {
 			const randomLine = Utils.numberBetween(0, dungeon.length),
-				randomColumn = Utils.numberBetween(0, dungeon[0].length);
+				randomColumn = Utils.numberBetween(0, dungeon[0].length),
+				endLine = randomLine + height,
+				endColumn = randomColumn + width;
 
-			return new BuildableAreaModel(
-				randomLine,
-				randomColumn,
-				getBuildableDirections(dungeon, randomLine, randomColumn)
-			);
+			if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall)) {
+				return new BuildableCoordinateModel(
+					randomLine,
+					randomColumn,
+					getBuildableDirections(dungeon, randomLine, randomColumn)
+				);
+			}
+
+			return getRandomBuildableCoordinate(dungeon, width, height);
 		}
 
 		const possibleBuildableAreas = [],
@@ -125,9 +133,9 @@ const Utils = (() => {
 	 * @return {boolean} True if the scanned rect contains expected content
 	 */
 	function scanRect(dungeon, initLine, initColumn, endLine, endColumn, expected) {
-		for (let l = initLine; l <= endLine; l++) {
-			for (let c = initColumn; c <= endColumn; c++) {
-				if (dungeon[l][c] !== expected) {
+		for (let l = initLine; l < endLine; l++) {
+			for (let c = initColumn; c < endColumn; c++) {
+				if (!dungeon[l] || !dungeon[l][c] || dungeon[l][c] !== expected) {
 					return false;
 				}
 			}
@@ -156,19 +164,19 @@ const Utils = (() => {
 		) {
 			/* Top */
 			if (directions.indexOf(Directions.TOP_LEFT) > -1) {
-				if (dungeon[line - 1][column - 1] !== expected) {
+				if (dungeon[line - 1] && dungeon[line - 1][column - 1] !== expected) {
 					return false;
 				}
 			}
 
 			if (directions.indexOf(Directions.TOP) > -1) {
-				if (dungeon[line - 1][column] !== expected) {
+				if (dungeon[line - 1] && dungeon[line - 1][column] !== expected) {
 					return false;
 				}
 			}
 
 			if (directions.indexOf(Directions.TOP_RIGHT) > -1) {
-				if (dungeon[line - 1][column + 1] !== expected) {
+				if (dungeon[line - 1] && dungeon[line - 1][column + 1] !== expected) {
 					return false;
 				}
 			}
@@ -196,19 +204,19 @@ const Utils = (() => {
 
 			/* Bottom */
 			if (directions.indexOf(Directions.BOTTOM_LEFT) > -1) {
-				if (dungeon[line + 1][column - 1] !== expected) {
+				if (dungeon[line + 1] && dungeon[line + 1][column - 1] !== expected) {
 					return false;
 				}
 			}
 
 			if (directions.indexOf(Directions.BOTTOM) > -1) {
-				if (dungeon[line + 1][column] !== expected) {
+				if (dungeon[line + 1] && dungeon[line + 1][column] !== expected) {
 					return false;
 				}
 			}
 
 			if (directions.indexOf(Directions.BOTTOM_RIGHT) > -1) {
-				if (dungeon[line + 1][column + 1] !== expected) {
+				if (dungeon[line + 1] && dungeon[line + 1][column + 1] !== expected) {
 					return false;
 				}
 			}
@@ -229,13 +237,17 @@ const Utils = (() => {
 	 * @param {Array<Array<string>>} dungeon The dungeon where to get the area
 	 * @param {integer} initLine Initial line of rect
 	 * @param {integer} initColumn Initial column of rect
-	 * @param {integer} endLine Final line of rect
-	 * @param {integer} endColumn Final column of rect
+	 * @param {integer} [endLine] Final line of rect
+	 * @param {integer} [endColumn] Final column of rect
 	 * @return {Array<Array<string>>} dungeon with the rect filles
 	 */
-	function fillRect(content, dungeon, initLine, initColumn, endLine, endColumn) {
+	function fillRect(content, dungeon, initLine, initColumn, endLine = initLine, endColumn = initColumn) {
 		for (let l = initLine; l <= endLine; l++) {
 			for (let c = initColumn; c <= endColumn; c++) {
+				if (!dungeon[l] || !dungeon[l][c]) {
+					throw Error(`Invalid coordinate ${initLine}\${initColumn} ${endLine}\${endColumn}`);
+				}
+
 				dungeon[l][c] = content;
 			}
 		}
@@ -243,8 +255,41 @@ const Utils = (() => {
 		return dungeon;
 	}
 
+	/**
+	 * Get borders of a rect
+	 * 
+	 * @author mauricio.araldi
+	 * @since 0.4.0
+	 *
+	 * @param {Array<Array<string>>} dungeon The dungeon from where to get borders coordinates
+	 * @param {integer} initLine The initial line coordinate of rect
+	 * @param {integer} initColumn The initial column coordinate of rect
+	 * @param {integer} endLine The final line coordinate of rect
+	 * @param {integer} endColumn The final column coordinate of rect
+	 * @return {Array<BuildableCoordinateModel>} The buildable coordinates of rect
+	 */
+	function getBordersCoordinates(dungeon, initLine, initColumn, endLine, endColumn) {
+		const buildableCoordinates = [];
+
+		for (let l = initLine; l <= endLine; l++) {
+			for (let c = initColumn; c <= endColumn; c++) {
+				if (
+					l === initLine
+					|| l === endLine
+					|| c === initColumn
+					|| c === endColumn
+				) {
+					buildableCoordinates.push(
+						new BuildableCoordinateModel(l, c, getBuildableDirections(dungeon, l, c))
+					);
+				}
+			}
+		}
+	}
+
 	return {
-		getRandomBuildableArea,
+		getBordersCoordinates,
+		getRandomBuildableCoordinate,
 		getBuildableDirections,
 		fillRect,
 		numberBetween,

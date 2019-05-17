@@ -40,11 +40,11 @@ const Dungeon = (() => {
 	function generateRoomsAndCorridors(dungeon, totalTries, currentTry = 0) {
 		const chance = Utils.numberBetween(1, 8);
 
-		// if (chance === 1) {
-		// 	Corridor.generateCorridor(dungeon);
-		// } else if (chance >= 2) {
-			Room.generateRoom(dungeon);
-		// }
+		if (chance === 1) {
+			Corridor.generate(dungeon);
+		} else if (chance >= 2) {
+			Room.generate(dungeon);
+		}
 
 		if (++currentTry === totalTries) {
 			return dungeon;

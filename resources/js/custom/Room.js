@@ -21,7 +21,7 @@ const Room = (() => {
 			throw Error('Parameter dungeon is required');
 		}
 
-		generateRoom(dungeon);
+		generate(dungeon);
 
 		return dungeon;
 	}
@@ -35,8 +35,10 @@ const Room = (() => {
 	 * @param {Array<Array<string>>} dungeon The dungeon where the room will be generated.
 	 * @param {integer} [width] The width of the room to be generated.
 	 * @param {integer} [height] The height of the room to be generated.
+	 *
+	 * @return {BuildingModel} The generated room
 	 */
-	function generateRoom(dungeon, width, height) {
+	function generate(dungeon, width, height) {
 		if (!width) {
 			width = Utils.numberBetween(Values.roomMinWidth, Values.roomMaxWidth);
 		}
@@ -55,7 +57,7 @@ const Room = (() => {
 	}
 
 	return {
-		generateFirstRoom,
-		generateRoom
+		generate,
+		generateFirstRoom
 	};
 })();

@@ -21,11 +21,7 @@ const Room = (() => {
 			throw Error('Parameter dungeon is required');
 		}
 
-		let dungeonWithFirstRoom;
-
-		while (!dungeonWithFirstRoom) {
-			dungeonWithFirstRoom = generateRoom(dungeon);
-		}
+		generateRoom(dungeon);
 
 		return dungeon;
 	}
@@ -35,7 +31,7 @@ const Room = (() => {
 	 *
 	 * @author mauricio.araldi
 	 * @since 0.4.0
-	 *TODO
+	 *
 	 * @param {Array<Array<string>>} dungeon The dungeon where the room will be generated.
 	 * @param {integer} [width] The width of the room to be generated.
 	 * @param {integer} [height] The height of the room to be generated.
@@ -49,44 +45,13 @@ const Room = (() => {
 			height = Utils.numberBetween(Values.roomMinHeight, Values.roomMaxHeight);
 		}
 
-		const buildableCoordinate = Utils.getRandomBuildableCoordinate(dungeon, width, height),
-			buildableLine = buildableCoordinate.line,
-			buildableColumn = buildableCoordinate.column;
+		const building = Building.generate(dungeon, width, height);
 
-		dungeon = Utils.fillRect(
-			Tiles.door,
-			dungeon,
-			buildableLine,
-			buildableColumn
-		);
+		building.type = BuildingTypes.ROOM;
 
-		dungeon = Utils.fillRect(
-			Tiles.floor,
-			dungeon,
-			buildableLine,
-			buildableColumn,
-			buildableLine + height,
-			buildableColumn + width
-		);
+		Content.rooms.push(building);
 
-		Content.rooms.push(
-			new RoomModel(
-				buildableLine,
-				buildableColumn,
-				buildableLine + height,
-				buildableColumn + width,
-				Utils.getBordersCoordinates(
-					dungeon,
-					buildableLine,
-					buildableColumn,
-					buildableLine + height,
-					buildableColumn + width
-				)
-			)
-		);
-
-		console.log(Content.rooms);
-		return dungeon;
+		return building;
 	}
 
 	return {

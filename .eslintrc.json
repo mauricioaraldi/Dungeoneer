@@ -79,6 +79,7 @@
 	},
 	"globals": {
 		"BuildableAreaModel": true,
+		"Building": true,
 		"BuildingTypes": true,
 		"Content": true,
 		"Corridor": true,

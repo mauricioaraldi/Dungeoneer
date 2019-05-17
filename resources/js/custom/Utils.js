@@ -245,7 +245,7 @@ const Utils = (() => {
 		for (let l = initLine; l <= endLine; l++) {
 			for (let c = initColumn; c <= endColumn; c++) {
 				if (!dungeon[l] || !dungeon[l][c]) {
-					throw Error(`Invalid coordinate ${initLine}\${initColumn} ${endLine}\${endColumn}`);
+					throw Error(`Invalid coordinate ${initLine},${initColumn} ${endLine},${endColumn}`);
 				}
 
 				dungeon[l][c] = content;
@@ -257,7 +257,7 @@ const Utils = (() => {
 
 	/**
 	 * Get borders of a rect
-	 * 
+	 *
 	 * @author mauricio.araldi
 	 * @since 0.4.0
 	 *

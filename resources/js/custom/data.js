@@ -4,7 +4,7 @@
 
 	Values.dungeon = Room.generateFirstRoom(Values.dungeon);
 
-	// Values.dungeon = Dungeon.generateRoomsAndCorridors(Values.dungeon, 2000);
+	Values.dungeon = Dungeon.generateRoomsAndCorridors(Values.dungeon, 100);
 
 	// Values.dungeon = Stair.generateStairDown(Values.dungeon, 500);
 

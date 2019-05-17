@@ -30,8 +30,8 @@ const Dungeon = (() => {
 	 * Generate rooms and corridors
 	 *
 	 * @author mauricio.araldi
-	 * @since 0.3.0
-	 *TODO
+	 * @since 0.4.0
+	 *
 	 * @param {Array<Array<string>>} dungeon The dungeon to be filled
 	 * @param {integer} totalTries The number of tries before returning dungeon
 	 * @param {integer} [currentTry = 0] Current try
@@ -40,11 +40,11 @@ const Dungeon = (() => {
 	function generateRoomsAndCorridors(dungeon, totalTries, currentTry = 0) {
 		const chance = Utils.numberBetween(1, 8);
 
-		if (chance === 1) {
-			Corridor.generateCorridor(dungeon);
-		} else if (chance >= 2) {
+		// if (chance === 1) {
+		// 	Corridor.generateCorridor(dungeon);
+		// } else if (chance >= 2) {
 			Room.generateRoom(dungeon);
-		}
+		// }
 
 		if (++currentTry === totalTries) {
 			return dungeon;

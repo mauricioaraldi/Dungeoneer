@@ -67,24 +67,20 @@ const Utils = (() => {
 		const possibleBuildableAreas = [],
 			buildings = [...Content.rooms, ...Content.corridors];
 
+		let randomBuildableArea = null,
+			directions = null;
+
 		buildings.forEach(building => {
-			if (building.buildableAreas.length) {
-				possibleBuildableAreas.concat(building.buildableAreas);
-			}
+			possibleBuildableAreas.push(...building.getBuildableBorderAreas());
 		});
 
-		console.log('buildings', buildings, possibleBuildableAreas);
-		return [1, 1];
+		randomBuildableArea = possibleBuildableAreas[Utils.numberBetween(0, possibleBuildableAreas.length)];
 
-		// if (dungeon[randomLine][randomColumn] === Tiles.floor) {
-		// 	const directions = getValidDirections(dungeon, randomLine, randomColumn, ['T', 'R', 'B', 'L'], Tiles.wall);
-
-		// 	if (directions.length > 0) {
-		// 		return [randomLine, randomColumn];
-		// 	}
-		// }
-
-		// return getRandomValidCordinates(dungeon);
+		return new BuildableCoordinateModel(
+			randomBuildableArea[0],
+			randomBuildableArea[1],
+			getBuildableDirections(dungeon, randomBuildableArea[0], randomBuildableArea[1])
+		);
 	}
 
 	/**

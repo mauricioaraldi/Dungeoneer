@@ -15,8 +15,9 @@ const Building = (() => {
 	 * @param {Array<Array<string>>} dungeon The dungeon where the building will be generated.
 	 * @param {integer} width The width of the building to be generated.
 	 * @param {integer} height The height of the room to be generated.
+	 * @param {boolean} [canBeJoined] If the room can be joined with other rooms
 	 */
-	function generate(dungeon, width, height) {
+	function generate(dungeon, width, height, canBeJoined) {
 		if (!width) {
 			throw Error('Parameter width is required');
 		}
@@ -25,7 +26,7 @@ const Building = (() => {
 			throw Error('Parameter height is required');
 		}
 
-		const buildableCoordinate = Utils.getRandomBuildableCoordinate(dungeon, width, height),
+		const buildableCoordinate = Utils.getRandomBuildableCoordinate(dungeon, width, height, canBeJoined),
 			initLine = buildableCoordinate.line,
 			initColumn = buildableCoordinate.column,
 			endLine = initLine + height,

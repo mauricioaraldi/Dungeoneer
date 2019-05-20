@@ -26,9 +26,22 @@ function BuildingModel(dungeon, initLine, initColumn, endLine, endColumn) {
 
 		for (let l = borderInitLine; l <= borderEndLine; l++) {
 			for (let c = borderInitColumn; c <= borderEndColumn; c++) {
-				if (l === borderInitLine || l === borderEndLine
-					|| c === borderInitColumn || c === borderEndColumn) {
-					if (l >= 0 && c >= 0 && l < this.dungeon.length && c < this.dungeon[0].length) {
+				if (
+						(
+							(l === borderInitLine || l === borderEndLine)
+							&& c >= this.initColumn && c <= this.endColumn
+						)
+					|| 
+						(
+							(c === borderInitColumn || c === borderEndColumn)
+							&& l >= this.initLine && l <= this.endLine
+						)
+				) {
+					if (l >= 0
+						&& c >= 0
+						&& l <= this.dungeon.length
+						&& c <= this.dungeon[0].length
+					) {
 						borderAreas.push([l, c]);
 					}
 				}

@@ -59,7 +59,7 @@ const Utils = (() => {
 				endLine = randomLine + height,
 				endColumn = randomColumn + width;
 
-			if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall)) {
+			if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall, !interpolate)) {
 				return new BuildableCoordinateModel(randomLine, randomColumn);
 			}
 
@@ -87,14 +87,14 @@ const Utils = (() => {
 		endLine = randomLine + height;
 		endColumn = randomColumn + width;
 
-		if (interpolate || scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall)) {
+		if (interpolate || scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall, !interpolate)) {
 			return new BuildableCoordinateModel(randomLine, randomColumn);
 		}
 
 		randomLine = randomBuildableArea[0] - height;
 		endLine = randomBuildableArea[0];
 
-		if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall)) {
+		if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall, !interpolate)) {
 			return new BuildableCoordinateModel(randomLine, randomColumn);
 		}
 
@@ -103,14 +103,14 @@ const Utils = (() => {
 		randomColumn = randomBuildableArea[1] - width;
 		endColumn = randomBuildableArea[1];
 
-		if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall)) {
+		if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall, !interpolate)) {
 			return new BuildableCoordinateModel(randomLine, randomColumn);
 		}
 
 		randomLine = randomBuildableArea[0] - height;
 		endLine = randomBuildableArea[0];
 
-		if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall)) {
+		if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall, !interpolate)) {
 			return new BuildableCoordinateModel(randomLine, randomColumn);
 		}
 
@@ -160,11 +160,17 @@ const Utils = (() => {
 	 * @param {integer} endLine Final line of rect
 	 * @param {integer} endColumn Final column of rect
 	 * @param {string} expected The expected content of rect
+	 * @param {boolean} [safeBorder = true] If the border around the area should also be scanned
 	 * @return {boolean} True if the scanned rect contains expected content
 	 */
-	function scanRect(dungeon, initLine, initColumn, endLine, endColumn, expected) {
-		for (let l = initLine; l <= endLine; l++) {
-			for (let c = initColumn; c <= endColumn; c++) {
+	function scanRect(dungeon, initLine, initColumn, endLine, endColumn, expected, safeBorder = true) {
+		let initialLine = safeBorder ? initLine - 1 : initLine,
+			initialColumn = safeBorder ? initColumn - 1 : initColumn,
+			finalLine = safeBorder ? endLine + 1 : endLine,
+			finalColumn = safeBorder ? endColumn + 1 : endColumn;
+
+		for (let l = initialLine; l <= finalLine; l++) {
+			for (let c = initialColumn; c <= finalColumn; c++) {
 				if (!dungeon[l] || !dungeon[l][c] || dungeon[l][c] !== expected) {
 					return false;
 				}

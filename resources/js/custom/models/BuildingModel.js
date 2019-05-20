@@ -12,14 +12,17 @@ function BuildingModel(dungeon, initLine, initColumn, endLine, endColumn) {
 	 * @author mauricio.araldi
 	 * @since 0.4.0
 	 *
+	 * @param {integer} distanceFromRoom The distance that the buildable area needs to be from the room
 	 * @return {Array<Array>} The buildable border areas
 	 */
-	this.getBuildableBorderAreas = () => {
+	this.getBuildableBorderAreas = (distanceFromRoom = 1) => {
+		distanceFromRoom++;
+
 		const borderAreas = [],
-			borderInitLine = this.initLine - 1,
-			borderEndLine = this.endLine + 1,
-			borderInitColumn = this.initColumn - 1,
-			borderEndColumn = this.endColumn + 1;
+			borderInitLine = this.initLine - distanceFromRoom,
+			borderEndLine = this.endLine + distanceFromRoom,
+			borderInitColumn = this.initColumn - distanceFromRoom,
+			borderEndColumn = this.endColumn + distanceFromRoom;
 
 		for (let l = borderInitLine; l <= borderEndLine; l++) {
 			for (let c = borderInitColumn; c <= borderEndColumn; c++) {

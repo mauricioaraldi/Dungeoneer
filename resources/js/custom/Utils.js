@@ -40,16 +40,16 @@ const Utils = (() => {
 	 * @param {Array<Array<string>>} dungeon The dungeon from where to get cordinates
 	 * @param {integer} [width] Width of the building
 	 * @param {integer} [height] Height of the building
-	 * @param {boolean} [canBeJoined] If the room can be joined with other rooms
+	 * @param {boolean} [interpolate] If the room can be joined with other rooms
 	 * @return {Array<integer>} Random valid cordinates from dungeon
 	 */
-	function getRandomBuildableCoordinate(dungeon, width, height, canBeJoined) {
+	function getRandomBuildableCoordinate(dungeon, width, height, interpolate) {
 		if (!dungeon) {
 			throw Error('Parameter dungeon is required');
 		}
 
 		if (typeof width === 'boolean') {
-			canBeJoined = width;
+			interpolate = width;
 			width = undefined;
 		}
 
@@ -60,11 +60,7 @@ const Utils = (() => {
 				endColumn = randomColumn + width;
 
 			if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall)) {
-				return new BuildableCoordinateModel(
-					randomLine,
-					randomColumn,
-					getBuildableDirections(dungeon, randomLine, randomColumn)
-				);
+				return new BuildableCoordinateModel(randomLine, randomColumn);
 			}
 
 			return getRandomBuildableCoordinate(dungeon, width, height);
@@ -78,7 +74,8 @@ const Utils = (() => {
 			randomLine = null,
 			randomColumn = null,
 			endLine = null,
-			endColumn = null;
+			endColumn = null,
+			buildableDirections = null;
 
 		buildings.forEach(building => {
 			possibleBuildableAreas.push(...building.getBuildableBorderAreas());
@@ -90,12 +87,31 @@ const Utils = (() => {
 		endLine = randomLine + height;
 		endColumn = randomColumn + width;
 
-		if (canBeJoined || scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall)) {
-			return new BuildableCoordinateModel(
-				randomLine,
-				randomColumn,
-				getBuildableDirections(dungeon, randomLine, randomColumn)
-			);
+		if (interpolate || scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall)) {
+			return new BuildableCoordinateModel(randomLine, randomColumn);
+		}
+
+		randomLine = randomBuildableArea[0] - height;
+		endLine = randomBuildableArea[0];
+
+		if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall)) {
+			return new BuildableCoordinateModel(randomLine, randomColumn);
+		}
+
+		randomLine = randomBuildableArea[0];
+		endLine = randomBuildableArea[0] + height;
+		randomColumn = randomBuildableArea[1] - width;
+		endColumn = randomBuildableArea[1];
+
+		if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall)) {
+			return new BuildableCoordinateModel(randomLine, randomColumn);
+		}
+
+		randomLine = randomBuildableArea[0] - height;
+		endLine = randomBuildableArea[0];
+
+		if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall)) {
+			return new BuildableCoordinateModel(randomLine, randomColumn);
 		}
 
 		return getRandomBuildableCoordinate(dungeon, width, height);
@@ -134,7 +150,7 @@ const Utils = (() => {
 
 	/**
 	 * Scans a rect veryfing if the content is what is expected
-	 *TODO
+	 *
 	 * @author mauricio.araldi
 	 * @since 0.3.0
 	 *
@@ -147,8 +163,8 @@ const Utils = (() => {
 	 * @return {boolean} True if the scanned rect contains expected content
 	 */
 	function scanRect(dungeon, initLine, initColumn, endLine, endColumn, expected) {
-		for (let l = initLine; l < endLine; l++) {
-			for (let c = initColumn; c < endColumn; c++) {
+		for (let l = initLine; l <= endLine; l++) {
+			for (let c = initColumn; c <= endColumn; c++) {
 				if (!dungeon[l] || !dungeon[l][c] || dungeon[l][c] !== expected) {
 					return false;
 				}

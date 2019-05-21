@@ -71,7 +71,7 @@ const Dungeon = (() => {
 
 		buildings.forEach((building, index) => {
 			building.borderAreasWithNeighbor = building.getBuildableBorderAreas(0);
-			buildingNeighbors[index] = {};
+			buildingNeighbors[index] = { originalIndex: index };
 		});
 
 		buildings.forEach((building, index) => {
@@ -114,10 +114,10 @@ const Dungeon = (() => {
 			);
 
 			buildingNeighbors.forEach(buildingToDeleteFrom => {
-				delete buildingToDeleteFrom[neighborIndex];
+				delete buildingToDeleteFrom[building.originalIndex];
 			});
 
-			buildingNeighbors = buildingNeighbors.filter(building => Object.keys(building).length);
+			buildingNeighbors = buildingNeighbors.slice(1).filter(building => Object.keys(building).length > 1);
 		}
 
 		return dungeon;

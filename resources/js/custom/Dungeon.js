@@ -38,12 +38,15 @@ const Dungeon = (() => {
 	 * @return {Array<Array<string>>} The filled dungeon
 	 */
 	function generateRoomsAndCorridors(dungeon, totalTries, currentTry = 0) {
-		const chance = Utils.numberBetween(1, 8);
+		const formatChance = Utils.numberBetween(1, 8),
+			interpolateChance = Utils.numberBetween(1, 2)
 
-		if (chance === 1) {
-			Corridor.generate(dungeon);
-		} else if (chance >= 2) {
-			Room.generate(dungeon);
+		if (formatChance === 1) {
+			Corridor.generate(dungeon, false);
+			// Corridor.generate(dungeon, interpolateChance === 1);
+		} else if (formatChance >= 2) {
+			Room.generate(dungeon, false);
+			// Room.generate(dungeon, interpolateChance === 1);
 		}
 
 		if (++currentTry === totalTries) {
@@ -53,8 +56,76 @@ const Dungeon = (() => {
 		return generateRoomsAndCorridors(dungeon, totalTries, currentTry);
 	}
 
+	/**
+	 * Generates doors between all rooms in the cave
+	 *
+	 * @author mauricio.araldi
+	 * @since 0.4.0
+	 *
+	 * @param {Array<Array<string>>} dungeon The dungeon to have its doors generated
+	 * @return {Array<Array<string>>} The dungeon with all doors
+	 */
+	function generateDoors(dungeon) {
+		let buildings = [...Content.rooms, ...Content.corridors],
+			buildingNeighbors = [];
+
+		buildings.forEach((building, index) => {
+			building.borderAreasWithNeighbor = building.getBuildableBorderAreas(0);
+			buildingNeighbors[index] = {};
+		});
+
+		buildings.forEach((building, index) => {
+			for (let i = index + 1; i < buildings.length; i++) {
+				let neighbor = buildings[i];
+
+				building.borderAreasWithNeighbor.forEach(buildingArea => {
+					neighbor.borderAreasWithNeighbor.forEach(neighborArea => {
+						if (buildingArea[0] === neighborArea[0]
+							&& buildingArea[1] === neighborArea[1]) {
+							if (!buildingNeighbors[index][i]) {
+								buildingNeighbors[index][i] = [];
+							}
+
+							if (!buildingNeighbors[i][index]) {
+								buildingNeighbors[i][index] = [];
+							}
+
+							buildingNeighbors[index][i].push(buildingArea);
+							buildingNeighbors[i][index].push(neighborArea);
+						}
+					});
+				});
+			}
+		});
+
+		while (buildingNeighbors.length) {
+			buildingNeighbors.sort((a, b) => Object.keys(a).length - Object.keys(b).length);
+
+			let building = buildingNeighbors[0],
+				neighborIndex = Object.keys(building)[0],
+				possibleAreas = building[neighborIndex],
+				randomArea = Utils.numberBetween(0, possibleAreas.length - 1);
+
+			Utils.fillRect(
+				Tiles.door,
+				dungeon,
+				possibleAreas[randomArea][0],
+				possibleAreas[randomArea][1]
+			);
+
+			buildingNeighbors.forEach(buildingToDeleteFrom => {
+				delete buildingToDeleteFrom[neighborIndex];
+			});
+
+			buildingNeighbors = buildingNeighbors.filter(building => Object.keys(building).length);
+		}
+
+		return dungeon;
+	}
+
 	return {
 		initiate,
+		generateDoors,
 		generateRoomsAndCorridors
 	};
 })();

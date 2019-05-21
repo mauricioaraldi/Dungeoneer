@@ -35,10 +35,11 @@ const Room = (() => {
 	 * @param {Array<Array<string>>} dungeon The dungeon where the room will be generated.
 	 * @param {integer} [width] The width of the room to be generated.
 	 * @param {integer} [height] The height of the room to be generated.
+	 * @param {boolean} [interpolate] If the room should be interpolated with other
 	 *
 	 * @return {BuildingModel} The generated room
 	 */
-	function generate(dungeon, width, height) {
+	function generate(dungeon, width, height, interpolate) {
 		if (!width) {
 			width = Utils.numberBetween(Values.roomMinWidth, Values.roomMaxWidth);
 		}
@@ -47,7 +48,7 @@ const Room = (() => {
 			height = Utils.numberBetween(Values.roomMinHeight, Values.roomMaxHeight);
 		}
 
-		const building = Building.generate(dungeon, width, height);
+		const building = Building.generate(dungeon, width, height, interpolate);
 
 		building.type = BuildingTypes.ROOM;
 

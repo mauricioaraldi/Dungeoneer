@@ -15,10 +15,11 @@ const Corridor = (() => {
 	 * @param {Array<Array<string>>} dungeon The dungeon where the corridor will be generated.
 	 * @param {integer} [width] The width of the corridor to be generated.
 	 * @param {integer} [height] The height of the corridor to be generated.
+	 * @param {boolean} [interpolate] If the corridor should be interpolated with other
 	 *
 	 * @return {BuildingModel} The generated corridor
 	 */
-	function generate(dungeon, width, height) {
+	function generate(dungeon, width, height, interpolate) {
 		const orientation = Utils.numberBetween(1, 2);
 
 		if (orientation === 1) {
@@ -29,7 +30,7 @@ const Corridor = (() => {
 			height = Utils.numberBetween(Values.roomMinWidth, Values.roomMaxWidth);
 		}
 
-		const building = Building.generate(dungeon, width, height);
+		const building = Building.generate(dungeon, width, height, interpolate);
 
 		building.type = BuildingTypes.CORRIDOR;
 

@@ -25,8 +25,8 @@ const Stair = (() => {
 		}
 
 		// Get random position
-		const randomLine = Utils.numberBetween(0, dungeon.length),
-			randomColumn = Utils.numberBetween(0, dungeon[0].length);
+		const randomLine = Utils.numberBetween(0, dungeon.length - 1),
+			randomColumn = Utils.numberBetween(0, dungeon[0].length - 1);
 
 		// Verify if random position is a valid position for the stair down
 		if (dungeon[randomLine][randomColumn] === Tiles.floor) {
@@ -65,8 +65,8 @@ const Stair = (() => {
 		}
 
 		// Get random position
-		const randomLine = Utils.numberBetween(0, dungeon.length),
-			randomColumn = Utils.numberBetween(0, dungeon[0].length);
+		const randomLine = Utils.numberBetween(0, dungeon.length - 1),
+			randomColumn = Utils.numberBetween(0, dungeon[0].length - 1);
 
 		// Verify if random position is a valid position for the stair up
 		if (dungeon[randomLine][randomColumn] === Tiles.floor) {

@@ -54,8 +54,8 @@ const Utils = (() => {
 		}
 
 		if (!Content.rooms.length) {
-			const randomLine = Utils.numberBetween(0, dungeon.length),
-				randomColumn = Utils.numberBetween(0, dungeon[0].length),
+			const randomLine = Utils.numberBetween(0, dungeon.length - 1),
+				randomColumn = Utils.numberBetween(0, dungeon[0].length - 1),
 				endLine = randomLine + height,
 				endColumn = randomColumn + width;
 
@@ -81,7 +81,7 @@ const Utils = (() => {
 			possibleBuildableAreas.push(...building.getBuildableBorderAreas());
 		});
 
-		randomBuildableArea = possibleBuildableAreas[Utils.numberBetween(0, possibleBuildableAreas.length)];
+		randomBuildableArea = possibleBuildableAreas[Utils.numberBetween(0, possibleBuildableAreas.length - 1)];
 		randomLine = randomBuildableArea[0];
 		randomColumn = randomBuildableArea[1];
 		endLine = randomLine + height;

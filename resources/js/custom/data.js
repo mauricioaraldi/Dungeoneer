@@ -4,15 +4,15 @@
 
 	Values.dungeon = Room.generateFirstRoom(Values.dungeon);
 
-	Values.dungeon = Dungeon.generateRoomsAndCorridors(Values.dungeon, 20);
+	Values.dungeon = Dungeon.generateRoomsAndCorridors(Values.dungeon, 30);
 
 	Values.dungeon = Dungeon.generateDoors(Values.dungeon);
 
-	// Values.dungeon = Stair.generateStairDown(Values.dungeon, 500);
+	Values.dungeon = Stair.generateStair(Values.dungeon, Tiles.stairDown);
 
-	// Values.dungeon = Stair.generateStairUp(Values.dungeon, 500);
+	Values.dungeon = Stair.generateStair(Values.dungeon, Tiles.stairUp);
 
-	// TODO - Add map borders
+	Values.dungeon = Dungeon.addBorders(Values.dungeon);
 
 	Print.printDungeonOnBody(Values.dungeon);
 };

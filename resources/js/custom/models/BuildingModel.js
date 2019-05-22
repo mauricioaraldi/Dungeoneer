@@ -1,5 +1,5 @@
 /* eslint-disable-next-line no-unused-vars */
-function BuildingModel(dungeon, initLine, initColumn, endLine, endColumn) {
+function BuildingModel(dungeon, initLine, initColumn, endLine = initLine, endColumn = initColumn) {
 	this.dungeon = dungeon;
 	this.initLine = initLine;
 	this.initColumn = initColumn;

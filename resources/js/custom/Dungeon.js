@@ -122,7 +122,37 @@ const Dungeon = (() => {
 		return dungeon;
 	}
 
+	/**
+	 * Add walls as borders on the current dungeon
+	 *
+	 * @author mauricio.araldi
+	 * @since 0.4.0
+	 *
+	 * @param {Array<Array<string>>} dungeon The dungeon in which to add borders
+	 * @return {Array<Array<string>>} The dungeon with borders
+	 */
+	function addBorders(dungeon) {
+		dungeon.forEach(line => {
+			line.unshift(Tiles.wall);
+			line.push(Tiles.wall)
+		});
+
+		dungeon = [Tiles.wall.repeat(dungeon[0].length).split(''), ...dungeon, Tiles.wall.repeat(dungeon[0].length).split('')];
+
+		for (let key in Content) {
+			Content[key].forEach(building => {
+				building.initLine++;
+				building.endLine++;
+				building.initColumn++;
+				building.endColumn++;
+			});
+		}
+
+		return dungeon;
+	}
+
 	return {
+		addBorders,
 		initiate,
 		generateDoors,
 		generateRoomsAndCorridors

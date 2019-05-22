@@ -28,19 +28,6 @@ const Values = {
 	},
 
 	/* eslint-disable-next-line no-unused-vars */
-	Directions = {
-		BOTTOM: 'BOTTOM',
-		BOTTOM_LEFT: 'BOTTOM_LEFT',
-		BOTTOM_RIGHT: 'BOTTOM_RIGHT',
-		CENTER: 'CENTER',
-		LEFT: 'LEFT',
-		RIGHT: 'RIGHT',
-		TOP: 'TOP',
-		TOP_LEFT: 'TOP_LEFT',
-		TOP_RIGHT: 'TOP_RIGHT'
-	},
-
-	/* eslint-disable-next-line no-unused-vars */
 	BuildingTypes = {
 		CORRIDOR: 'CORRIDOR',
 		ROOM: 'ROOM'

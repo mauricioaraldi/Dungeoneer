@@ -70,12 +70,10 @@ const Utils = (() => {
 			buildings = [...Content.rooms, ...Content.corridors];
 
 		let randomBuildableArea = null,
-			directions = null,
 			randomLine = null,
 			randomColumn = null,
 			endLine = null,
-			endColumn = null,
-			buildableDirections = null;
+			endColumn = null;
 
 		buildings.forEach(building => {
 			possibleBuildableAreas.push(...building.getBuildableBorderAreas());
@@ -118,37 +116,6 @@ const Utils = (() => {
 	}
 
 	/**
-	 * Get valid directions from a specific coordinate, accordingly to what is expected
-	 *
-	 * @author mauricio.araldi
-	 * @since 0.4.0
-	 *
-	 * @param {Array<Array<string>>} dungeon The dungeon which to be used to verify
-	 * @param {integer} line The line cordinate of position
-	 * @param {integer} column The column cordinate of position
-	 * @param {Array<string>} [directionsToTest] Directions to be verified
-	 * @param {Array<string>} [expected] Tile which is considered valid
-	 * @return {Array<string>} All expected and tested valid directions
-	 */
-	function getBuildableDirections(dungeon, line, column, directionsToTest, expected = Tiles.wall) {
-		if (!directionsToTest || !directionsToTest.length) {
-			directionsToTest = [
-				Directions.BOTTOM,
-				Directions.BOTTOM_LEFT,
-				Directions.BOTTOM_RIGHT,
-				Directions.CENTER,
-				Directions.LEFT,
-				Directions.RIGHT,
-				Directions.TOP,
-				Directions.TOP_LEFT,
-				Directions.TOP_RIGHT
-			];
-		}
-
-		return directionsToTest.filter(direction => verifyAround(dungeon, line, column, direction, expected));
-	}
-
-	/**
 	 * Scans a rect veryfing if the content is what is expected
 	 *
 	 * @author mauricio.araldi
@@ -180,95 +147,13 @@ const Utils = (() => {
 		return true;
 	}
 
-	/**
-	 * Scans a square around a point (8 tiles) for expected content
-	 *TODO
-	 * @author mauricio.araldi
-	 * @since 0.4.0
-	 *
-	 * @param {Array<Array<string>>} dungeon The dungeon to be scanned
-	 * @param {integer} line Line number of point to be scanned
-	 * @param {integer} column Column number of point to be scanned
-	 * @param {Array<string>} directions Directions to be scanned
-	 * @param {string} expected The expected content of scanned directions
-	 * @return {boolean} True if the scanned directions contains expected content
-	 */
-	function verifyAround(dungeon, line, column, directions, expected) {
-		if (
-			(line > 0 && line < Values.lines - 1)
-			&& (column > 0 && column < Values.columns - 1)
-		) {
-			/* Top */
-			if (directions.indexOf(Directions.TOP_LEFT) > -1) {
-				if (dungeon[line - 1] && dungeon[line - 1][column - 1] !== expected) {
-					return false;
-				}
-			}
-
-			if (directions.indexOf(Directions.TOP) > -1) {
-				if (dungeon[line - 1] && dungeon[line - 1][column] !== expected) {
-					return false;
-				}
-			}
-
-			if (directions.indexOf(Directions.TOP_RIGHT) > -1) {
-				if (dungeon[line - 1] && dungeon[line - 1][column + 1] !== expected) {
-					return false;
-				}
-			}
-			/* End Top */
-
-			/* Middle */
-			if (directions.indexOf(Directions.LEFT) > -1) {
-				if (dungeon[line][column - 1] !== expected) {
-					return false;
-				}
-			}
-
-			if (directions.indexOf(Directions.CENTER) > -1) {
-				if (dungeon[line][column] !== expected) {
-					return false;
-				}
-			}
-
-			if (directions.indexOf(Directions.RIGHT) > -1) {
-				if (dungeon[line][column + 1] !== expected) {
-					return false;
-				}
-			}
-			/* End Middle */
-
-			/* Bottom */
-			if (directions.indexOf(Directions.BOTTOM_LEFT) > -1) {
-				if (dungeon[line + 1] && dungeon[line + 1][column - 1] !== expected) {
-					return false;
-				}
-			}
-
-			if (directions.indexOf(Directions.BOTTOM) > -1) {
-				if (dungeon[line + 1] && dungeon[line + 1][column] !== expected) {
-					return false;
-				}
-			}
-
-			if (directions.indexOf(Directions.BOTTOM_RIGHT) > -1) {
-				if (dungeon[line + 1] && dungeon[line + 1][column + 1] !== expected) {
-					return false;
-				}
-			}
-			/* End Bottom */
-
-			return true;
-		}
-
-		return false;
-	}
 
 	/**
 	 * Fills a rect with content
 	 *
 	 * @author mauricio.araldi
-	 *TODO
+	 * @since 0.4.0
+	 *
 	 * @param {string} content The content to fill rect
 	 * @param {Array<Array<string>>} dungeon The dungeon where to get the area
 	 * @param {integer} initLine Initial line of rect
@@ -291,45 +176,10 @@ const Utils = (() => {
 		return dungeon;
 	}
 
-	/**
-	 * Get borders of a rect
-	 *
-	 * @author mauricio.araldi
-	 * @since 0.4.0
-	 *
-	 * @param {Array<Array<string>>} dungeon The dungeon from where to get borders coordinates
-	 * @param {integer} initLine The initial line coordinate of rect
-	 * @param {integer} initColumn The initial column coordinate of rect
-	 * @param {integer} endLine The final line coordinate of rect
-	 * @param {integer} endColumn The final column coordinate of rect
-	 * @return {Array<BuildableCoordinateModel>} The buildable coordinates of rect
-	 */
-	function getBordersCoordinates(dungeon, initLine, initColumn, endLine, endColumn) {
-		const buildableCoordinates = [];
-
-		for (let l = initLine; l <= endLine; l++) {
-			for (let c = initColumn; c <= endColumn; c++) {
-				if (
-					l === initLine
-					|| l === endLine
-					|| c === initColumn
-					|| c === endColumn
-				) {
-					buildableCoordinates.push(
-						new BuildableCoordinateModel(l, c, getBuildableDirections(dungeon, l, c))
-					);
-				}
-			}
-		}
-	}
-
 	return {
-		getBordersCoordinates,
 		getRandomBuildableCoordinate,
-		getBuildableDirections,
 		fillRect,
 		numberBetween,
-		scanRect,
-		verifyAround
+		scanRect
 	};
 })();

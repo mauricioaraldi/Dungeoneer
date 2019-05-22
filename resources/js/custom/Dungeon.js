@@ -33,12 +33,12 @@ const Dungeon = (() => {
 	 * @since 0.4.0
 	 *
 	 * @param {Array<Array<string>>} dungeon The dungeon to be filled
-	 * @param {integer} totalTries The number of tries before returning dungeon
+	 * @param {integer} maxTries The number of tries before returning dungeon
 	 * @param {boolean} canInterpolate If the generated rooms can be interpolated
 	 * @param {integer} [currentTry = 0] Current try
 	 * @return {Array<Array<string>>} The filled dungeon
 	 */
-	function generateRoomsAndCorridors(dungeon, totalTries, canInterpolate, currentTry = 0) {
+	function generateRoomsAndCorridors(dungeon, maxTries, canInterpolate, currentTry = 0) {
 		const formatChance = Utils.numberBetween(1, 8),
 			interpolateChance = canInterpolate ? Utils.numberBetween(1, 2) : 0;
 
@@ -48,11 +48,11 @@ const Dungeon = (() => {
 			Room.generate(dungeon, interpolateChance === 1);
 		}
 
-		if (++currentTry === totalTries) {
+		if (++currentTry === maxTries) {
 			return dungeon;
 		}
 
-		return generateRoomsAndCorridors(dungeon, totalTries, canInterpolate, currentTry);
+		return generateRoomsAndCorridors(dungeon, maxTries, canInterpolate, currentTry);
 	}
 
 	/**

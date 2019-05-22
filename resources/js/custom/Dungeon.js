@@ -66,36 +66,7 @@ const Dungeon = (() => {
 	 */
 	function generateDoors(dungeon) {
 		let buildings = [...Content.rooms, ...Content.corridors],
-			buildingNeighbors = [];
-
-		buildings.forEach((building, index) => {
-			building.borderAreasWithNeighbor = building.getBuildableBorderAreas(0);
-			buildingNeighbors[index] = { originalIndex: index };
-		});
-
-		buildings.forEach((building, index) => {
-			for (let i = index + 1; i < buildings.length; i++) {
-				let neighbor = buildings[i];
-
-				building.borderAreasWithNeighbor.forEach(buildingArea => {
-					neighbor.borderAreasWithNeighbor.forEach(neighborArea => {
-						if (buildingArea[0] === neighborArea[0]
-							&& buildingArea[1] === neighborArea[1]) {
-							if (!buildingNeighbors[index][i]) {
-								buildingNeighbors[index][i] = [];
-							}
-
-							if (!buildingNeighbors[i][index]) {
-								buildingNeighbors[i][index] = [];
-							}
-
-							buildingNeighbors[index][i].push(buildingArea);
-							buildingNeighbors[i][index].push(neighborArea);
-						}
-					});
-				});
-			}
-		});
+			buildingNeighbors = checkInterpolatedNeighbors(getBuildingNeighborsList(buildings));
 
 		while (buildingNeighbors.length) {
 			buildingNeighbors.sort((a, b) => Object.keys(a).length - Object.keys(b).length);
@@ -120,6 +91,78 @@ const Dungeon = (() => {
 		}
 
 		return dungeon;
+	}
+
+	/**
+	 * [getBuildingNeighborsList description]
+	 * @author mauricio.araldi
+	 * @param {[type]} buildings [description]
+	 * @return {[type]} [description]
+	 */
+	function getBuildingNeighborsList(buildings) {
+		const buildingNeighbors = [],
+			buildingsToVerify = [...buildings];
+
+		buildingsToVerify.forEach((building, index) => {
+			building.borderAreasWithNeighbor = building.getBuildableBorderAreas(0);
+			buildingNeighbors[index] = { originalIndex: index };
+		});
+
+		buildingsToVerify.forEach((building, index) => {
+			for (let i = index + 1; i < buildingsToVerify.length; i++) {
+				let neighbor = buildingsToVerify[i];
+
+				building.borderAreasWithNeighbor.forEach(buildingArea => {
+					neighbor.borderAreasWithNeighbor.forEach(neighborArea => {
+						if (buildingArea[0] === neighborArea[0]
+							&& buildingArea[1] === neighborArea[1]) {
+							if (!buildingNeighbors[index][i]) {
+								buildingNeighbors[index][i] = [];
+							}
+
+							if (!buildingNeighbors[i][index]) {
+								buildingNeighbors[i][index] = [];
+							}
+
+							buildingNeighbors[index][i].push(buildingArea);
+							buildingNeighbors[i][index].push(neighborArea);
+						}
+					});
+				});
+			}
+		});
+
+		return buildingNeighbors;
+	}
+
+	/**
+	 * Check if neighbors are interpolated and mix them
+	 * 
+	 * @author mauricio.araldi
+	 * @since 0.4.0
+	 * 
+	 * @param {Array<Object>} neighbors The neighbors to be checked
+	 * @return {Array<Object>} Neighbors mixed with their interpolations
+	 */
+	function checkInterpolatedNeighbors(neighbors) {
+		const interpolatedNeighbors = [...neighbors];
+
+		for (let i = 0; i < interpolatedNeighbors.length; i++) {
+			let currentNeighbor = interpolatedNeighbors[i];
+
+			for (let j = i + 1; j < interpolatedNeighbors.length; j++) {
+				let nextNeighbor = interpolatedNeighbors[i];
+
+				if (currentNeighbor.initLine >= nextNeighbor.initLine
+					&& currentNeighbor.initLine <= nextNeighbor.initLine
+					&& currentNeighbor.initColumn >= nextNeighbor.initColumn
+					&& currentNeighbor.initColumn <= nextNeighbor.endColumn) {
+					//Overlaps
+				}
+			}
+		}
+
+		return interpolatedNeighbors;
 	}
 
 	/**

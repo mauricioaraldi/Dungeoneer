@@ -43,9 +43,9 @@ const Dungeon = (() => {
 			interpolateChance = canInterpolate ? Utils.numberBetween(1, 2) : 0;
 
 		if (formatChance === 1) {
-			Corridor.generate(dungeon, interpolateChance === 1);
+			Corridor.generate(dungeon, true);
 		} else if (formatChance >= 2) {
-			Room.generate(dungeon, interpolateChance === 1);
+			Room.generate(dungeon, true);
 		}
 
 		if (++currentTry === maxTries) {
@@ -66,14 +66,15 @@ const Dungeon = (() => {
 	 */
 	function generateDoors(dungeon) {
 		let buildings = [...Content.rooms, ...Content.corridors],
-			buildingNeighbors = checkInterpolatedNeighbors(getBuildingNeighborsList(buildings));
+			buildingNeighbors = checkInterpolatedNeighbors(getBuildingNeighborsList(buildings))
+					.filter(building => Object.keys(building.neighbors).length);
 
 		while (buildingNeighbors.length) {
-			buildingNeighbors.sort((a, b) => Object.keys(a).length - Object.keys(b).length);
+			buildingNeighbors.sort((a, b) => Object.keys(a.neighbors).length - Object.keys(b.neighbors).length);
 
 			let building = buildingNeighbors[0],
-				neighborIndex = Object.keys(building)[0],
-				possibleAreas = building[neighborIndex],
+				neighborIndex = Object.keys(building.neighbors)[0],
+				possibleAreas = building.neighbors[neighborIndex],
 				randomArea = Utils.numberBetween(0, possibleAreas.length - 1);
 
 			Utils.fillRect(
@@ -84,10 +85,26 @@ const Dungeon = (() => {
 			);
 
 			buildingNeighbors.forEach(buildingToDeleteFrom => {
-				delete buildingToDeleteFrom[building.originalIndex];
+				delete buildingToDeleteFrom.neighbors[building.originalIndex];
+
+				building.interpolates.forEach(index => {
+					delete buildingToDeleteFrom.neighbors[index];
+
+					if (index === buildingToDeleteFrom.originalIndex) {
+						delete buildingToDeleteFrom.neighbors[neighborIndex];
+
+						buildingNeighbors.forEach(deleteInterpolatesFromNeighbor => {
+							if (deleteInterpolatesFromNeighbor.originalIndex === neighborIndex) {
+								deleteInterpolatesFromNeighbor.interpolates.forEach(deleteInterpolatesFromNeighborIndex => {
+									delete buildingToDeleteFrom.neighbors[deleteInterpolatesFromNeighborIndex];
+								});
+							}
+						});
+					}
+				});
 			});
 
-			buildingNeighbors = buildingNeighbors.slice(1).filter(building => Object.keys(building).length > 1);
+			buildingNeighbors = buildingNeighbors.slice(1).filter(building => Object.keys(building.neighbors).length);
 		}
 
 		return dungeon;
@@ -105,7 +122,7 @@ const Dungeon = (() => {
 
 		buildingsToVerify.forEach((building, index) => {
 			building.borderAreasWithNeighbor = building.getBuildableBorderAreas(0);
-			buildingNeighbors[index] = { originalIndex: index };
+			buildingNeighbors[index] = { originalIndex: index, building, neighbors: {} };
 		});
 
 		buildingsToVerify.forEach((building, index) => {
@@ -116,16 +133,16 @@ const Dungeon = (() => {
 					neighbor.borderAreasWithNeighbor.forEach(neighborArea => {
 						if (buildingArea[0] === neighborArea[0]
 							&& buildingArea[1] === neighborArea[1]) {
-							if (!buildingNeighbors[index][i]) {
-								buildingNeighbors[index][i] = [];
+							if (!buildingNeighbors[index].neighbors[i]) {
+								buildingNeighbors[index].neighbors[i] = [];
 							}
 
-							if (!buildingNeighbors[i][index]) {
-								buildingNeighbors[i][index] = [];
+							if (!buildingNeighbors[i].neighbors[index]) {
+								buildingNeighbors[i].neighbors[index] = [];
 							}
 
-							buildingNeighbors[index][i].push(buildingArea);
-							buildingNeighbors[i][index].push(neighborArea);
+							buildingNeighbors[index].neighbors[i].push(buildingArea);
+							buildingNeighbors[i].neighbors[index].push(neighborArea);
 						}
 					});
 				});
@@ -142,27 +159,45 @@ const Dungeon = (() => {
 	 * @since 0.4.0
 	 * 
 	 * @param {Array<Object>} neighbors The neighbors to be checked
-	 * @return {Array<Object>} Neighbors mixed with their interpolations
+	 * @return {Array<Object>} Neighbors with interpolation info
 	 */
 	function checkInterpolatedNeighbors(neighbors) {
-		const interpolatedNeighbors = [...neighbors];
+		for (let i = 0; i < neighbors.length; i++) {
+			let currentNeighbor = neighbors[i];
 
-		for (let i = 0; i < interpolatedNeighbors.length; i++) {
-			let currentNeighbor = interpolatedNeighbors[i];
+			for (let j = i + 1; j < neighbors.length; j++) {
+				let nextNeighbor = neighbors[j];
 
-			for (let j = i + 1; j < interpolatedNeighbors.length; j++) {
-				let nextNeighbor = interpolatedNeighbors[i];
+				if (!currentNeighbor.interpolates) {
+					currentNeighbor.interpolates = new Set();
+				}
 
-				if (currentNeighbor.initLine >= nextNeighbor.initLine
-					&& currentNeighbor.initLine <= nextNeighbor.initLine
-					&& currentNeighbor.initColumn >= nextNeighbor.initColumn
-					&& currentNeighbor.initColumn <= nextNeighbor.endColumn) {
-					//Overlaps
+				if (!nextNeighbor.interpolates) {
+					nextNeighbor.interpolates = new Set();
+				}
+
+				if (
+					currentNeighbor.building.initLine - 1 <= nextNeighbor.building.endLine &&
+					currentNeighbor.building.endLine + 1 >= nextNeighbor.building.initLine &&
+					currentNeighbor.building.initColumn - 1 <= nextNeighbor.building.endColumn &&
+					currentNeighbor.building.endColumn + 1 >= nextNeighbor.building.initColumn
+				) {
+					currentNeighbor.interpolates.add(nextNeighbor.originalIndex);
+					nextNeighbor.interpolates.add(currentNeighbor.originalIndex);
 				}
 			}
 		}
 
-		return interpolatedNeighbors;
+		neighbors.forEach(building => {
+			building.interpolates.forEach(interpolationIndex => {
+				neighbors[interpolationIndex].interpolates.forEach(index => {
+					building.interpolates.add(index);
+					delete building.neighbors[index];
+				});
+			});
+		});
+
+		return neighbors;
 	}
 
 	/**

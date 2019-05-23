@@ -43,9 +43,9 @@ const Dungeon = (() => {
 			interpolateChance = canInterpolate ? Utils.numberBetween(1, 2) : 0;
 
 		if (formatChance === 1) {
-			Corridor.generate(dungeon, true);
+			Corridor.generate(dungeon, interpolateChance === 1);
 		} else if (formatChance >= 2) {
-			Room.generate(dungeon, true);
+			Room.generate(dungeon, interpolateChance === 1);
 		}
 
 		if (++currentTry === maxTries) {
@@ -91,15 +91,15 @@ const Dungeon = (() => {
 					delete buildingToDeleteFrom.neighbors[index];
 
 					if (index === buildingToDeleteFrom.originalIndex) {
-						delete buildingToDeleteFrom.neighbors[neighborIndex];
+						// delete buildingToDeleteFrom.neighbors[neighborIndex];
 
-						buildingNeighbors.forEach(deleteInterpolatesFromNeighbor => {
-							if (deleteInterpolatesFromNeighbor.originalIndex === neighborIndex) {
-								deleteInterpolatesFromNeighbor.interpolates.forEach(deleteInterpolatesFromNeighborIndex => {
-									delete buildingToDeleteFrom.neighbors[deleteInterpolatesFromNeighborIndex];
-								});
-							}
-						});
+						// buildingNeighbors.forEach(deleteInterpolatesFromNeighbor => {
+						// 	if (deleteInterpolatesFromNeighbor.originalIndex === neighborIndex) {
+						// 		deleteInterpolatesFromNeighbor.interpolates.forEach(deleteInterpolatesFromNeighborIndex => {
+						// 			delete buildingToDeleteFrom.neighbors[deleteInterpolatesFromNeighborIndex];
+						// 		});
+						// 	}
+						// });
 					}
 				});
 			});

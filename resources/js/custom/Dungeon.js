@@ -73,7 +73,8 @@ const Dungeon = (() => {
 			buildingNeighbors.sort((a, b) => Object.keys(a.neighbors).length - Object.keys(b.neighbors).length);
 
 			let building = buildingNeighbors[0],
-				neighborIndex = Object.keys(building.neighbors)[0],
+				neighborIndex = parseInt(Object.keys(building.neighbors)[0]),
+				neighbor = buildingNeighbors.find(buildingNeighbor => buildingNeighbor.originalIndex === neighborIndex),
 				possibleAreas = building.neighbors[neighborIndex],
 				randomArea = Utils.numberBetween(0, possibleAreas.length - 1);
 
@@ -84,23 +85,41 @@ const Dungeon = (() => {
 				possibleAreas[randomArea][1]
 			);
 
-			buildingNeighbors.forEach(buildingToDeleteFrom => {
-				delete buildingToDeleteFrom.neighbors[building.originalIndex];
+			buildingNeighbors.forEach(buildingNeighbor => {
+				delete buildingNeighbor.neighbors[building.originalIndex];
+			});
 
-				building.interpolates.forEach(index => {
-					delete buildingToDeleteFrom.neighbors[index];
+			building.interpolates.forEach(buildingInterpolateIndex => {
+				let buildingInterpolate = buildingNeighbors.find(
+						buildingNeighbor => buildingNeighbor.originalIndex === buildingInterpolateIndex
+					);
 
-					if (index === buildingToDeleteFrom.originalIndex) {
-						// delete buildingToDeleteFrom.neighbors[neighborIndex];
+				if (!buildingInterpolate) {
+					return;
+				}
 
-						// buildingNeighbors.forEach(deleteInterpolatesFromNeighbor => {
-						// 	if (deleteInterpolatesFromNeighbor.originalIndex === neighborIndex) {
-						// 		deleteInterpolatesFromNeighbor.interpolates.forEach(deleteInterpolatesFromNeighborIndex => {
-						// 			delete buildingToDeleteFrom.neighbors[deleteInterpolatesFromNeighborIndex];
-						// 		});
-						// 	}
-						// });
-					}
+				delete buildingInterpolate.neighbors[neighbor.originalIndex];
+				delete neighbor.neighbors[buildingInterpolateIndex];
+
+				neighbor.interpolates.forEach(neighborInterpolateIndex => {
+					delete buildingInterpolate.neighbors[neighborInterpolateIndex];
+				});
+			});
+
+			neighbor.interpolates.forEach(neighborInterpolateIndex => {
+				let neighborInterpolate = buildingNeighbors.find(
+						buildingNeighbor => buildingNeighbor.originalIndex === neighborInterpolateIndex
+					);
+
+				if (!neighborInterpolate) {
+					return;
+				}
+
+				delete neighborInterpolate.neighbors[building.originalIndex];
+				delete building.neighbors[neighborInterpolateIndex];
+
+				building.interpolates.forEach(buildingInterpolateIndex => {
+					delete neighborInterpolate.neighbors[buildingInterpolateIndex];
 				});
 			});
 

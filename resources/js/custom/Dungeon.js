@@ -181,6 +181,10 @@ const Dungeon = (() => {
 	 * @return {Array<Object>} Neighbors with interpolation info
 	 */
 	function checkInterpolatedNeighbors(neighbors) {
+		if (neighbors.length < 2) {
+			return neighbors;
+		}
+
 		for (let i = 0; i < neighbors.length; i++) {
 			let currentNeighbor = neighbors[i];
 
@@ -201,6 +205,26 @@ const Dungeon = (() => {
 					currentNeighbor.building.initColumn - 1 <= nextNeighbor.building.endColumn &&
 					currentNeighbor.building.endColumn + 1 >= nextNeighbor.building.initColumn
 				) {
+					if (currentNeighbor.building.initLine - 1 === nextNeighbor.building.endLine
+						&& currentNeighbor.building.initColumn - 1 === nextNeighbor.building.endColumn) {
+						continue;
+					}
+
+					if (currentNeighbor.building.initLine - 1 === nextNeighbor.building.endLine
+						&& currentNeighbor.building.endColumn + 1 === nextNeighbor.building.initColumn) {
+						continue;
+					}
+
+					if (currentNeighbor.building.endLine + 1 === nextNeighbor.building.initLine
+						&& currentNeighbor.building.endColumn + 1 === nextNeighbor.building.initColumn) {
+						continue;
+					}
+
+					if (currentNeighbor.building.endLine + 1 === nextNeighbor.building.initLine
+						&& currentNeighbor.building.initColumn - 1 === nextNeighbor.building.endColumn) {
+						continue;
+					}
+
 					currentNeighbor.interpolates.add(nextNeighbor.originalIndex);
 					nextNeighbor.interpolates.add(currentNeighbor.originalIndex);
 				}
@@ -215,7 +239,7 @@ const Dungeon = (() => {
 				});
 			});
 		});
-
+		
 		return neighbors;
 	}
 

@@ -7,26 +7,6 @@
 /* eslint-disable-next-line no-unused-vars */
 const Room = (() => {
 	/**
-	 * Generate the first room of the dungeon. This function is separated
-	 * because it needs to surely generate a room, with no errors.
-	 *
-	 * @author mauricio.araldi
-	 * @since 0.4.0
-	 *
-	 * @param {Array<Array<string>>} dungeon The dungeon where the room will be generated.
-	 * @return {Array<Array<string>>} The dungeon with the room
-	 */
-	function generateFirstRoom(dungeon) {
-		if (!dungeon) {
-			throw Error('Parameter dungeon is required');
-		}
-
-		generate(dungeon);
-
-		return dungeon;
-	}
-
-	/**
 	 * Generate a new room on the dungeon
 	 *
 	 * @author mauricio.araldi
@@ -58,7 +38,6 @@ const Room = (() => {
 	}
 
 	return {
-		generate,
-		generateFirstRoom
+		generate
 	};
 })();

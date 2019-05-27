@@ -41,9 +41,10 @@ const Utils = (() => {
 	 * @param {integer} [width] Width of the building
 	 * @param {integer} [height] Height of the building
 	 * @param {boolean} [interpolate] If the room can be joined with other rooms
+	 * @param {integer} currentTry Current try in getting a random coordinate
 	 * @return {Array<integer>} Random valid cordinates from dungeon
 	 */
-	function getRandomBuildableCoordinate(dungeon, width, height, interpolate) {
+	function getRandomBuildableCoordinate(dungeon, width, height, interpolate, currentTry = 0) {
 		if (!dungeon) {
 			throw Error('Parameter dungeon is required');
 		}
@@ -51,19 +52,6 @@ const Utils = (() => {
 		if (typeof width === 'boolean') {
 			interpolate = width;
 			width = undefined;
-		}
-
-		if (!Content.rooms.length) {
-			const randomLine = Utils.numberBetween(0, dungeon.length - 1),
-				randomColumn = Utils.numberBetween(0, dungeon[0].length - 1),
-				endLine = randomLine + height,
-				endColumn = randomColumn + width;
-
-			if (scanRect(dungeon, randomLine, randomColumn, endLine, endColumn, Tiles.wall, !interpolate)) {
-				return new BuildableCoordinateModel(randomLine, randomColumn);
-			}
-
-			return getRandomBuildableCoordinate(dungeon, width, height);
 		}
 
 		const possibleBuildableAreas = [],
@@ -78,6 +66,10 @@ const Utils = (() => {
 		buildings.forEach(building => {
 			possibleBuildableAreas.push(...building.getBuildableBorderAreas());
 		});
+
+		if (!possibleBuildableAreas.length) {
+			possibleBuildableAreas.push([Utils.numberBetween(0, dungeon.length - 1), Utils.numberBetween(0, dungeon[0].length - 1)]);
+		}
 
 		randomBuildableArea = possibleBuildableAreas[Utils.numberBetween(0, possibleBuildableAreas.length - 1)];
 		randomLine = randomBuildableArea[0];
@@ -112,7 +104,11 @@ const Utils = (() => {
 			return new BuildableCoordinateModel(randomLine, randomColumn);
 		}
 
-		return getRandomBuildableCoordinate(dungeon, width, height);
+		if (++currentTry === Values.maxRandomCoordinatesTry) {
+			throw Error('It wasn\'t possible to get a random buildable coordinate.');
+		}
+
+		return getRandomBuildableCoordinate(dungeon, width, height, currentTry);
 	}
 
 	/**

@@ -36,23 +36,34 @@ const Dungeon = (() => {
 	 * @param {integer} maxTries The number of tries before returning dungeon
 	 * @param {boolean} canInterpolate If the generated rooms can be interpolated
 	 * @param {integer} [currentTry = 0] Current try
+	 * @param {Array<Error>} [errors = 0] Errors that happened during creation
 	 * @return {Array<Array<string>>} The filled dungeon
 	 */
-	function generateRoomsAndCorridors(dungeon, maxTries, canInterpolate, currentTry = 0) {
+	function generateRoomsAndCorridors(dungeon, maxTries, canInterpolate, currentTry = 0, errors = []) {
 		const formatChance = Utils.numberBetween(1, 8),
-			interpolateChance = canInterpolate ? Utils.numberBetween(1, 2) : 0;
+			interpolateChance = canInterpolate ? Utils.numberBetween(1, 5) : 0;
 
-		if (formatChance === 1) {
-			Corridor.generate(dungeon, interpolateChance === 1);
-		} else if (formatChance >= 2) {
-			Room.generate(dungeon, interpolateChance === 1);
+		try {
+			if (formatChance === 1) {
+				Corridor.generate(dungeon, interpolateChance === 1);
+			} else if (formatChance >= 2) {
+				Room.generate(dungeon, interpolateChance === 1);
+			}
+		} catch (error) {
+			if (++currentTry === maxTries) {
+				console.log(`${errors.length} happened during rooms and corridors creation.`);
+				return dungeon;
+			}
+
+			errors.push(error);
 		}
 
 		if (++currentTry === maxTries) {
+			console.log(`${errors.length} happened during rooms and corridors creation.`);
 			return dungeon;
 		}
 
-		return generateRoomsAndCorridors(dungeon, maxTries, canInterpolate, currentTry);
+		return generateRoomsAndCorridors(dungeon, maxTries, canInterpolate, currentTry, errors);
 	}
 
 	/**
